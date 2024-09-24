@@ -1,6 +1,7 @@
 import 'package:carrent/Color/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -113,7 +114,7 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, "/NavBar");
+                    context.push("/home");
                   },
                   child: Container(
                     width: double.infinity,
@@ -158,7 +159,7 @@ class _LogInPageState extends State<LogInPage> {
                     ),
                     TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, "/SignUp");
+                         context.push("/signUp");
                         },
                         child: Text(
                           'Register',

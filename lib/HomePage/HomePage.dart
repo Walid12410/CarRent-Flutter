@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carrent/Color/color.dart';
 import 'package:carrent/model/Promo/PromoModel.dart';
 import 'package:carrent/provider/Car_Provider.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../Time/CurrentTime.dart';
-import '../model/Offer/OfferModel.dart';
 import '../provider/Promo_Provider.dart';
 import 'Widget/HeaderPage.dart';
 import 'Widget/LatestCar.dart';
@@ -56,96 +54,99 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: tdWhite,
       body: SafeArea(
-          child: FutureBuilder(
-              future: _fetchDataFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: tdBlack,
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      'Something went wrong, check your connection.',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15.sp,
-                        color: tdGrey,
+          child: RefreshIndicator(
+            onRefresh: _fetchData,
+            color: tdBlueLight,
+            child: FutureBuilder(
+                future: _fetchDataFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: tdBlack,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  );
-                } else {
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 20.h,
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Something went wrong, check your connection.',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15.sp,
+                          color: tdGrey,
                         ),
-                        const HeaderPage(),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        Column(
-                          children: [
-                            ExpandablePageView(
-                                controller: _pageController,
-                                onPageChanged: (page) {
-                                  setState(() {
-                                    _currentPage = page;
-                                  });
-                                },
-                                children: [
-                                  for (Promo promoList in latestPromo)
-                                    PromoCard(promoList: promoList),
-                                ]),
-                            SizedBox(
-                              height: 7.h,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20).w,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: List.generate(
-                                  3,
-                                  (index) => Container(
-                                    width: index == _currentPage ? 8.w : 5.w,
-                                    height: index == _currentPage ? 8.h : 5.h,
-                                    margin: EdgeInsets.symmetric(horizontal: 6.w),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: index == _currentPage
-                                          ? tdBlueLight
-                                          : tdGrey,
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  } else {
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          const HeaderPage(),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Column(
+                            children: [
+                              ExpandablePageView(
+                                  controller: _pageController,
+                                  onPageChanged: (page) {
+                                    setState(() {
+                                      _currentPage = page;
+                                    });
+                                  },
+                                  children: [
+                                    for (Promo promoList in latestPromo)
+                                      PromoCard(promoList: promoList),
+                                  ]),
+                              SizedBox(
+                                height: 7.h,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20).w,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: List.generate(
+                                    3,
+                                    (index) => Container(
+                                      width: index == _currentPage ? 8.w : 5.w,
+                                      height: index == _currentPage ? 8.h : 5.h,
+                                      margin: EdgeInsets.symmetric(horizontal: 6.w),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: index == _currentPage
+                                            ? tdBlueLight
+                                            : tdGrey,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 15.h,),
-                            const SectionTitle(title: 'Latest Vehicle', actionText: 'See more'),
-                            SizedBox(height: 10.h),
-                            const LatestCarCard(),
-                            SizedBox(height: 15.h),
-                            const SectionTitle(title: 'Our Partners', actionText: 'See all'),
-                            SizedBox(height: 10.h),
-                            const LatestCompanyCard(),
-                            SizedBox(height: 15.h),
-                            const SectionTitle(title: 'Limited Offer', actionText: 'See more'),
-                            SizedBox(height: 10.h),
-                            const TopOfferCard(),
-                            SizedBox(height: 50.h,),
-
-                          ],
-                        )
-                      ],
-                    ),
-                  );
-                }
-              }),
+                              SizedBox(height: 15.h,),
+                              const SectionTitle(title: 'Latest Vehicle', actionText: 'See more'),
+                              SizedBox(height: 10.h),
+                              const LatestCarCard(),
+                              SizedBox(height: 15.h),
+                              const SectionTitle(title: 'Our Partners', actionText: 'See all'),
+                              SizedBox(height: 10.h),
+                              const LatestCompanyCard(),
+                              SizedBox(height: 15.h),
+                              const SectionTitle(title: 'Limited Offer', actionText: 'See more'),
+                              SizedBox(height: 10.h),
+                              const TopOfferCard(),
+                              SizedBox(height: 50.h,),
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                }),
+          ),
       ),
     );
   }

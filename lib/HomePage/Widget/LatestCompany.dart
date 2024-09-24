@@ -56,7 +56,7 @@ class LatestCompanyCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${companyList.companyName} - ${companyList.carCount}Cars',style: TextStyle(fontSize: 12.sp,color: tdBlueLight,
+                        Text('${companyList.companyName} - ${companyList.carCount} Cars',style: TextStyle(fontSize: 12.sp,color: tdBlueLight,
                             fontWeight: FontWeight.bold),),
                       ],
                     ),
