@@ -39,7 +39,9 @@ class _CarCategoryPageState extends State<CarCategoryPage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 18.sp,
                       color: tdBlueLight),
-                )
+                ),
+                SizedBox(height: 10.h,),
+
               ],
             ),
           ),

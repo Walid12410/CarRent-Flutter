@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:carrent/model/Car/CarModel.dart';
 import 'package:http/http.dart' as http;
-
 import '../ApiEndPoint.dart';
 
 

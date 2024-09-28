@@ -14,5 +14,4 @@ class CarProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
 }

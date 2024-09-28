@@ -67,11 +67,9 @@ class Car {
       reviewCount: json['reviewCount'] ?? 0,
       averageRating: (json['averageRating'] ?? 0).toDouble(),
       firstCarImage: (json['CarImage'] as List<dynamic>?)
-          ?.map((imageJson) => CarImage.fromJson(imageJson))
-          .toList() ??
+              ?.map((imageJson) => CarImage.fromJson(imageJson))
+              .toList() ??
           [],
     );
   }
 }
-
-

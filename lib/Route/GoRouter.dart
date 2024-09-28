@@ -47,9 +47,6 @@ class AppNavigation {
                 name: "Home",
                 builder: (BuildContext context, GoRouterState state) =>
                     const HomePage(),
-                // routes: [
-                // add route for home
-                // ],
               ),
             ],
           ),
