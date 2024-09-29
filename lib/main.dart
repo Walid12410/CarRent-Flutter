@@ -1,4 +1,5 @@
 import 'package:carrent/provider/Car_Provider.dart';
+import 'package:carrent/provider/Category_Provider.dart';
 import 'package:carrent/provider/Company_Provider.dart';
 import 'package:carrent/provider/Offer_Provider.dart';
 import 'package:carrent/provider/Promo_Provider.dart';
@@ -15,6 +16,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => PromoProvider()),
       ChangeNotifierProvider(create: (_) => CarProvider()),
       ChangeNotifierProvider(create: (_) => CompanyProvider()),
+      ChangeNotifierProvider(create: (_) => CategoryProvider()),
       ChangeNotifierProvider(create: (_) => OfferProvider()),
     ],
     child: const MyApp(),
