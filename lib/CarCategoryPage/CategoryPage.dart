@@ -1,4 +1,4 @@
-import 'package:carrent/CarCategoryPage/Widget/CarCategoryView/CarCategory.dart';
+import 'package:carrent/CarCategoryPage/Widget/CarCategoryView.dart';
 import 'package:carrent/Color/color.dart';
 import 'package:carrent/model/Category/CategoryModel.dart';
 import 'package:carrent/provider/Category_Provider.dart';
@@ -134,8 +134,7 @@ class _CarCategoryPageState extends State<CarCategoryPage> {
                                         }),
                                   ),
                                 ),
-                                SizedBox(
-                                    height: 500.h,
+                                IntrinsicHeight(
                                     child:
                                         categories[_selectIndex].categoryName != ""
                                             ? CarCategoryView(

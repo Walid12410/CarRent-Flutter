@@ -20,7 +20,7 @@ class Car {
   final String updatedAt;
   final int reviewCount;
   final double averageRating;
-  final List<CarImage> firstCarImage;
+  final List<CarImage> carImage;
 
   Car({
     required this.id,
@@ -42,7 +42,7 @@ class Car {
     required this.updatedAt,
     required this.reviewCount,
     required this.averageRating,
-    required this.firstCarImage,
+    required this.carImage,
   });
 
   factory Car.fromJson(Map<String, dynamic> json) {
@@ -66,7 +66,7 @@ class Car {
       updatedAt: json['updatedAt'] ?? '',
       reviewCount: json['reviewCount'] ?? 0,
       averageRating: (json['averageRating'] ?? 0).toDouble(),
-      firstCarImage: (json['CarImage'] as List<dynamic>?)
+      carImage: (json['CarImage'] as List<dynamic>?)
               ?.map((imageJson) => CarImage.fromJson(imageJson))
               .toList() ??
           [],

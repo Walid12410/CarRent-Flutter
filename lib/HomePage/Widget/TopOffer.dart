@@ -38,8 +38,8 @@ class TopOfferCard extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15).w,
                         child: CachedNetworkImage(
-                          imageUrl: (offerList.car?.firstCarImage.isNotEmpty ?? false)
-                              ? offerList.car!.firstCarImage[0].carImage.url
+                          imageUrl: (offerList.car?.carImage.isNotEmpty ?? false)
+                              ? offerList.car!.carImage[0].carImage.url
                               : 'default_image_url',
                           fit: BoxFit.fill,
                           progressIndicatorBuilder:
@@ -63,13 +63,13 @@ class TopOfferCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('${offerList.car!.rentPrice} / day',style: TextStyle(fontSize: 10.sp,color: tdBlueLight,
+                      Text('\$${offerList.car!.rentPrice} / day',style: TextStyle(fontSize: 10.sp,color: tdBlueLight,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.lineThrough,
                         decorationThickness:3,
                         decorationColor: tdGrey,
                       ),),
-                      Text('  ${offerList.discountPrice} /day',style: TextStyle(fontSize: 12.sp,color: Colors.red,fontWeight: FontWeight.bold),),
+                      Text('   \$${offerList.discountPrice}/ day',style: TextStyle(fontSize: 12.sp,color: Colors.red,fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ],

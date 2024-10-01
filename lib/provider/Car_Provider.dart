@@ -14,4 +14,12 @@ class CarProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  List<Car> _categoryCar = [];
+  List<Car> get categoryCar => _categoryCar;
+  getCategoryCar(int pageNumber, String categoryId) async {
+    final res = await car.fetchCarCategory(pageNumber, categoryId);
+    _categoryCar = res;
+    notifyListeners();
+  }
+
 }

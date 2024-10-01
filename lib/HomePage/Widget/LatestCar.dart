@@ -38,8 +38,8 @@ class LatestCarCard extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15).w,
                           child: CachedNetworkImage(
-                            imageUrl: (carList.firstCarImage != null && carList.firstCarImage!.isNotEmpty)
-                                ? carList.firstCarImage![0].carImage.url
+                            imageUrl: (carList.carImage != null && carList.carImage!.isNotEmpty)
+                                ? carList.carImage![0].carImage.url
                                 : 'default_image_url',
                             fit: BoxFit.fill,
                             progressIndicatorBuilder:
