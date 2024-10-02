@@ -46,10 +46,17 @@ class _CarCategoryViewState extends State<CarCategoryView> {
       future: _fetchDataFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: tdBlack,
-            ),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 100.h,),
+              const Center(
+                child: CircularProgressIndicator(
+                  color: tdBlack,
+                ),
+              ),
+            ],
           );
         } else if (snapshot.hasError) {
           return Center(
@@ -62,6 +69,17 @@ class _CarCategoryViewState extends State<CarCategoryView> {
               ),
               textAlign: TextAlign.center,
             ),
+          );
+        }else if(categoryCar.isEmpty){
+          return Column(
+            mainAxisAlignment : MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height : 100.h),
+              Text('No car for this category', style: TextStyle(
+                fontSize: 15.sp,color: tdGrey , fontWeight: FontWeight.bold
+              ),textAlign: TextAlign.center,)
+            ],
           );
         } else {
           return SingleChildScrollView(

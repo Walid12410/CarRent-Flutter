@@ -1,6 +1,7 @@
-import 'PromoImageModel.dart';
+import 'package:carrent/model/Company/CompanyModel.dart';
+import 'package:carrent/model/Promo/PromoImageModel.dart';
 
-class Promo {
+class PromoDetails {
   final String id;
   final String promoCode;
   final int discountAmount;
@@ -10,14 +11,12 @@ class Promo {
   final int usageLimit;
   final int usedCount;
   final String status;
-  final String companyID;
   final String promoTitle;
   final String promoDescription;
-  final DateTime createdAt;
-  final DateTime updatedAt;
   final PromoImage promoImage;
+  final Company? companyDetails;
 
-  Promo({
+  PromoDetails({
     required this.id,
     required this.promoCode,
     required this.discountAmount,
@@ -27,17 +26,14 @@ class Promo {
     required this.usageLimit,
     required this.usedCount,
     required this.status,
-    required this.companyID,
     required this.promoTitle,
     required this.promoDescription,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.promoImage, // Add this line
+    required this.promoImage,
+    required this.companyDetails,
   });
 
-  factory Promo.fromJson(Map<String, dynamic> json) {
-    return Promo(
-      id: json['_id'] ?? '',
+   PromoDetails.fromJson(Map<String, dynamic> json) {
+      id = json['_id'] ?? '' ;
       promoCode: json['promoCode'] ?? '',
       discountAmount: json['discountAmount'] ?? 0,
       discountPercentage: json['discountPercentage'] ?? 0,
@@ -46,12 +42,11 @@ class Promo {
       usageLimit: json['usageLimit'] ?? 0,
       usedCount: json['usedCount'] ?? 0,
       status: json['status'] ?? '',
-      companyID: json['companyID'] ?? '',
       promoTitle: json['promoTitle'] ?? '',
       promoDescription: json['promoDescription'] ?? '',
-      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(json['updatedAt'] ?? DateTime.now().toIso8601String()),
-      promoImage: PromoImage.fromJson(json['promoImage'] ?? {}), // Add this line
-    );
+      promoImage: PromoImage.fromJson(json['promoImage'] ?? {}),
+      companyDetails: (json['comapanyDetails'] != null && (json['comapanyDetails'] as List).isNotEmpty)
+          ? Company.fromJson(json['comapanyDetails'][0])
+          : null,
   }
 }

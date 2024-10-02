@@ -5,6 +5,7 @@ import 'package:carrent/CompanyCarPage/CompanyPage.dart';
 import 'package:carrent/HomePage/HomePage.dart';
 import 'package:carrent/OnBoardingPage/PageView.dart';
 import 'package:carrent/ProfilePage/ProfilePage.dart';
+import 'package:carrent/PromotionDetailsPage/PromotionDetailsPage.dart';
 import 'package:carrent/PromotionPage/PromotionPage.dart';
 import 'package:carrent/navBar/NavBar.dart';
 import 'package:flutter/cupertino.dart';
@@ -127,8 +128,16 @@ class AppNavigation {
         builder: (context, state) => PageViewScreen(
           key: state.pageKey,
         ),
-      )
-
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/promoDetails/:id',
+        name: "PromoDetails",
+        builder: (context, state) => PromotionDetailsPage(
+          key: state.pageKey,
+          promoId: state.pathParameters['id']!,
+        ),
+      ),
     ],
   );
 }

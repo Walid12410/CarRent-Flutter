@@ -1,7 +1,7 @@
 import 'package:carrent/Api/PromoService.dart';
+import 'package:carrent/model/Promo/PromoDetailsModel.dart';
 import 'package:carrent/model/Promo/PromoModel.dart';
 import 'package:flutter/foundation.dart';
-
 
 class PromoProvider with ChangeNotifier {
   PromoService promo = PromoService();
@@ -14,5 +14,14 @@ class PromoProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
+  PromoDetails? _promoDetails;
+  PromoDetails? get promoDetails => _promoDetails;
+  getPromoDetails(String promoId) async {
+    print('asdasd');
+    
+    final res = await promo.fetchOnePromo(promoId);
+    print(res);
+    _promoDetails = res;
+    notifyListeners();
+  }
 }

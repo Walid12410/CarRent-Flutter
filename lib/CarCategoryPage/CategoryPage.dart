@@ -1,6 +1,5 @@
 import 'package:carrent/CarCategoryPage/Widget/CarCategoryView.dart';
 import 'package:carrent/Color/color.dart';
-import 'package:carrent/model/Category/CategoryModel.dart';
 import 'package:carrent/provider/Category_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
