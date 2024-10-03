@@ -37,6 +37,7 @@ class AppNavigation {
         builder: (context, state, navigationShell) {
           return NavBar(
             navigationShell: navigationShell,
+            router: router,
           );
         },
         branches: <StatefulShellBranch>[

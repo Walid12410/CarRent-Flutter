@@ -3,6 +3,7 @@ import 'package:carrent/Color/color.dart';
 import 'package:carrent/provider/Category_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class CarCategoryPage extends StatefulWidget {
@@ -70,7 +71,9 @@ class _CarCategoryPageState extends State<CarCategoryPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  GoRouter.of(context).go('/home');
+                                },
                                 icon: Icon(
                                   Icons.arrow_back_ios,
                                   size: 20.w,

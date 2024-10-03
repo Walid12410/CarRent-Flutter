@@ -1,7 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carrent/Color/color.dart';
+import 'package:carrent/PromotionDetailsPage/Widget/PromoCodeSection.dart';
+import 'package:carrent/PromotionDetailsPage/Widget/PromoDescription.dart';
+import 'package:carrent/PromotionDetailsPage/Widget/PromoTerms.dart';
+import 'package:carrent/PromotionDetailsPage/Widget/PromotionImage.dart';
 import 'package:carrent/provider/Promo_Provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -28,11 +32,24 @@ class _PromotionDetailsPageState extends State<PromotionDetailsPage> {
     await promo.getPromoDetails(widget.promoId);
   }
 
+  void copyToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Promo code copied',
+          style: TextStyle(fontSize: 10.sp, color: tdWhite),
+        ),
+        duration: const Duration(seconds: 2),
+        backgroundColor: tdBlueLight,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final promo = Provider.of<PromoProvider>(context, listen: true);
     var promoData = promo.promoDetails;
-
 
     return Scaffold(
       backgroundColor: tdWhite,
@@ -72,165 +89,39 @@ class _PromotionDetailsPageState extends State<PromotionDetailsPage> {
                 );
               } else {
                 return SingleChildScrollView(
-                  child: Column(children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: 200.h,
-                      child: CachedNetworkImage(
-                        imageUrl: (promoData.promoImage.url.isNotEmpty)
-                            ? promoData.promoImage.url
-                            : 'default_image_url',
-                        fit: BoxFit.cover,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
-                          value: downloadProgress.progress,
-                          color: tdBlueLight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PromotionImage(promoData: promoData),
+                      SizedBox(height: 15.h),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20,right: 20).w,
+                        child: Text(
+                          promoData.promoTitle,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.sp,
+                            color: tdBlueLight,
+                          ),
+                          textAlign: TextAlign.start,
                         ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
                       ),
-                    ),
-                    SizedBox(height: 15.h),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20, left: 20).w,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            promoData.promoTitle,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.sp,
-                              color: tdBlueLight,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 20.h),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5, left: 5).w,
-                            child: Container(
-                              width: double.infinity,
-                              height: 60.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15).w,
-                                border: Border.all(color: tdGrey),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 10)
-                                    .w,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'PROMO CODE',
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            color: tdGrey,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        SizedBox(height: 5.h),
-                                        Text(
-                                          promoData.promoCode,
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            color: tdBlueLight,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Container(
-                                      height: double.infinity,
-                                      width: 70.w,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(15).w,
-                                        color: tdBlueLight,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          'COPY',
-                                          style: TextStyle(
-                                            fontSize: 15.sp,
-                                            color: tdWhite,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20.h),
-                          Text(
-                            promoData.promoDescription,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: tdGrey,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                          SizedBox(height: 20.h),
-                          Text(
-                            'Terms and Conditions',
-                            style: TextStyle(
-                              fontSize: 15.sp,
-                              color: tdBlueLight,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 10.h),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20).w,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '-Minimum rent of \$${promoData.discountAmount}',
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: tdGrey,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                Text(
-                                  '-Discount percent ${promoData.discountPercentage}%',
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: tdGrey,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                Text(
-                                  '-Used for ${promoData.companyDetails?.companyName} company only',
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: tdGrey,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      SizedBox(height: 15.h),
+                      PromoCodeSection(
+                        promoCode: promoData.promoCode,
+                        onCopy: () => copyToClipboard(promoData.promoCode),
                       ),
-                    ),
-                  ]),
+                      SizedBox(height: 20.h),
+                      PromotionDescription(
+                          description: promoData.promoDescription),
+                      SizedBox(height: 20.h),
+                      TermsAndConditions(
+                        discountAmount: promoData.discountAmount,
+                        discountPercentage: promoData.discountPercentage,
+                      ),
+                    ],
+                  ),
                 );
               }
             }),
@@ -238,3 +129,4 @@ class _PromotionDetailsPageState extends State<PromotionDetailsPage> {
     );
   }
 }
+

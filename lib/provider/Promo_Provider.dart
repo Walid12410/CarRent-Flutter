@@ -16,11 +16,8 @@ class PromoProvider with ChangeNotifier {
 
   PromoDetails? _promoDetails;
   PromoDetails? get promoDetails => _promoDetails;
-  getPromoDetails(String promoId) async {
-    print('asdasd');
-    
+  getPromoDetails(String promoId) async {    
     final res = await promo.fetchOnePromo(promoId);
-    print(res);
     _promoDetails = res;
     notifyListeners();
   }

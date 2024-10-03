@@ -29,8 +29,6 @@ class PromoService {
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         PromoDetails promoDetails = PromoDetails.fromJson(jsonData);
-        print(jsonData);
-        print(promoDetails);
         return promoDetails;
       } else {
       throw Exception('Failed to load promo details');
