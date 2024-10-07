@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../ApiEndPoint.dart';
 import 'package:carrent/model/Company/CompanyModel.dart';
 
-class CompanyService{
+class CompanyService {
 
   Future<List<Company>> fetchLatestCompany() async {
     try {

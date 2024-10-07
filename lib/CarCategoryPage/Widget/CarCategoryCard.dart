@@ -25,9 +25,9 @@ class CarCategoryCard extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15).w,
             child: CachedNetworkImage(
-              imageUrl: (car.carImage != "null" &&
-                      car.carImage!.isNotEmpty)
-                  ? car.carImage![0].carImage.url
+              imageUrl: (car.carImage != Null &&
+                      car.carImage.isNotEmpty)
+                  ? car.carImage[0].carImage.url
                   : 'https://www.its.ac.id/tmesin/wp-content/uploads/sites/22/2022/07/no-image.png',
               fit: BoxFit.fill,
               progressIndicatorBuilder:

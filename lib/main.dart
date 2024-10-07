@@ -1,6 +1,7 @@
 import 'package:carrent/provider/Car_Provider.dart';
 import 'package:carrent/provider/Category_Provider.dart';
 import 'package:carrent/provider/Company_Provider.dart';
+import 'package:carrent/provider/Feature_Provider.dart';
 import 'package:carrent/provider/Offer_Provider.dart';
 import 'package:carrent/provider/Promo_Provider.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => CompanyProvider()),
       ChangeNotifierProvider(create: (_) => CategoryProvider()),
       ChangeNotifierProvider(create: (_) => OfferProvider()),
+      ChangeNotifierProvider(create: (_) => FeatureProvider()),
     ],
     child: const MyApp(),
   ));

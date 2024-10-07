@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Column(
                             children: [
-                              ExpandablePageView(
+                              latestPromo.isNotEmpty? ExpandablePageView(
                                   controller: _pageController,
                                   onPageChanged: (page) {
                                     setState(() {
@@ -101,7 +101,21 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     for (Promo promoList in latestPromo)
                                       PromoCard(promoList: promoList),
-                                  ]),
+                                  ]) : Padding(
+                                    padding: const EdgeInsets.only(left: 20,right: 20).w,
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 170.h,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: tdGrey),
+                                        borderRadius: BorderRadius.circular(15).w,
+                                        color: tdWhite
+                                      ),
+                                      child: Center(
+                                        child: Text('No promo added yet',style: TextStyle(fontSize: 12.sp,color: tdBlueLight,fontWeight: FontWeight.bold),),
+                                      ),
+                                    ),
+                                  ),
                               SizedBox(
                                 height: 7.h,
                               ),
