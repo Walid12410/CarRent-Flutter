@@ -1,7 +1,7 @@
 import 'package:carrent/Authentication/LogIn/LogInPage.dart';
 import 'package:carrent/Authentication/Register/SignUpPage.dart';
 import 'package:carrent/CarCategoryPage/CategoryPage.dart';
-import 'package:carrent/CompanyCarPage/CompanyPage.dart';
+import 'package:carrent/RentWayPage/RentWayPage.dart';
 import 'package:carrent/HomePage/HomePage.dart';
 import 'package:carrent/OnBoardingPage/PageView.dart';
 import 'package:carrent/ProfilePage/ProfilePage.dart';
@@ -21,8 +21,8 @@ class AppNavigation {
       GlobalKey<NavigatorState>(debugLabel: 'shellHome');
   static final _shellNavigatorCategory =
       GlobalKey<NavigatorState>(debugLabel: 'shellCategory');
-  static final _shellNavigatorCompany =
-      GlobalKey<NavigatorState>(debugLabel: 'shellCompany');
+  static final _shellNavigatorRentWay =
+      GlobalKey<NavigatorState>(debugLabel: 'shellRentWay');
   static final _shellNavigatorProfile =
       GlobalKey<NavigatorState>(debugLabel: 'shellProfile');
   static final _shellNavigatorCoupons =
@@ -66,13 +66,13 @@ class AppNavigation {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _shellNavigatorCompany,
+            navigatorKey: _shellNavigatorRentWay,
             routes: <RouteBase>[
               GoRoute(
-                path: "/company",
-                name: "Company",
+                path: "/rentWay",
+                name: "RentWay",
                 builder: (BuildContext context, GoRouterState state) =>
-                    const CompanyPage(),
+                    const RentWayPage(),
                 // routes: [
                 // ],
               ),

@@ -1,4 +1,5 @@
 import 'package:carrent/Api/PromoService.dart';
+import 'package:carrent/Time/CurrentTime.dart';
 import 'package:carrent/model/Promo/PromoDetailsModel.dart';
 import 'package:carrent/model/Promo/PromoModel.dart';
 import 'package:flutter/foundation.dart';
@@ -8,8 +9,8 @@ class PromoProvider with ChangeNotifier {
 
   List<Promo> _latestPromo = [];
   List<Promo> get latestPromo => _latestPromo;
-  getLatestPromo() async {
-    final res = await promo.fetchLatestPromo(1);
+  getLatestPromo(int pageNumber , String time , int limitPage) async {
+    final res = await promo.fetchPromo(pageNumber, time, limitPage);
     _latestPromo = res;
     notifyListeners();
   }
@@ -19,6 +20,48 @@ class PromoProvider with ChangeNotifier {
   getPromoDetails(String promoId) async {    
     final res = await promo.fetchOnePromo(promoId);
     _promoDetails = res;
+    notifyListeners();
+  }
+
+  final List<Promo> _promos = [];
+  bool _isLoading = false;
+  int _currentPage = 1;
+  final int _perPage = 4;
+  bool _hasMoreData = true;
+
+  List<Promo> get promos => _promos;
+  bool get isLoading => _isLoading;
+  bool get hasMoreData => _hasMoreData;
+
+  Future<void> fetchPromos() async {
+    String currentTime = getCurrentTimeInISO();
+
+
+    if(_isLoading || !_hasMoreData) return;
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      List<Promo> newPromos = await promo.fetchPromo(_currentPage, currentTime, 4);
+      if(newPromos.length < _perPage){
+        _hasMoreData = false;
+      } else{
+        _currentPage++;
+      }
+
+      _promos.addAll(newPromos);
+    } catch (e) {
+      throw Exception(e);
+    } finally{
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void resetPromos(){
+    _promos.clear();
+    _currentPage = 1;
+    _hasMoreData = true;
     notifyListeners();
   }
 }

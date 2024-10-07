@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     final offer = Provider.of<OfferProvider>(context, listen: false);
     await offer.getTopOffer(currentTime);
     await car.getLatestCar();
-    await promo.getLatestPromo();
+    await promo.getLatestPromo(1 , currentTime , 3);
     await company.getLastCompany();
   }
 
@@ -120,8 +120,7 @@ class _HomePageState extends State<HomePage> {
                                 height: 7.h,
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20).w,
+                                padding: const EdgeInsets.only(left: 20, right: 20).w,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: List.generate(

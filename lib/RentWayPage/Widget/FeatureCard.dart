@@ -16,7 +16,7 @@ class FeatureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20).w,
+      padding: const EdgeInsets.only(left: 20, right: 20,top: 5).w,
       child: GestureDetector(
         onTap: (){
           //
@@ -88,7 +88,7 @@ class FeatureCard extends StatelessWidget {
                 height: 5.h,
               ),
               Text(
-                '  \$${feature.car!.rentPrice} / day',
+                ' \$${feature.car!.rentPrice} / day',
                 style: TextStyle(
                     fontSize: 12.sp,
                     color: tdBlueLight,

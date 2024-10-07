@@ -2,10 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
-import '../../Color/color.dart';
-import '../../model/Car/CarModel.dart';
-import '../../provider/Car_Provider.dart';
+import 'package:carrent/Color/color.dart';
+import 'package:carrent/model/Car/CarModel.dart';
+import 'package:carrent/provider/Car_Provider.dart';
 
 class LatestCarCard extends StatelessWidget {
   const LatestCarCard({

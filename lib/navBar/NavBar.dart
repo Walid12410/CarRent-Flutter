@@ -23,7 +23,7 @@ class _NavBarState extends State<NavBar> {
       return 0;
     } else if (route.startsWith('/category')) {
       return 1;
-    } else if (route.startsWith('/company')) {
+    } else if (route.startsWith('/rentWay')) {
       return 2;
     } else if (route.startsWith('/profile')) {
       return 3;

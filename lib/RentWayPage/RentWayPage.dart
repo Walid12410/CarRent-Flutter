@@ -1,25 +1,26 @@
 import 'package:carrent/Color/color.dart';
-import 'package:carrent/CompanyCarPage/Widget/FeatureCard.dart';
+import 'package:carrent/RentWayPage/Widget/FeatureCard.dart';
 import 'package:carrent/provider/Feature_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class CompanyPage extends StatefulWidget {
-  const CompanyPage({super.key});
+class RentWayPage extends StatefulWidget {
+  const RentWayPage({super.key});
 
   @override
-  State<CompanyPage> createState() => _CompanyPageState();
+  State<RentWayPage> createState() => _RentWayPageState();
 }
 
-class _CompanyPageState extends State<CompanyPage> {
+class _RentWayPageState extends State<RentWayPage> {
   late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(_scrollListener);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<FeatureProvider>(context, listen: false).fetchFeatures();
     });
@@ -68,15 +69,30 @@ class _CompanyPageState extends State<CompanyPage> {
       body: Consumer<FeatureProvider>(
         builder: (context, featureProvider, child) {
           if (featureProvider.isLoading && featureProvider.features.isEmpty) {
-            return const Center(child: CircularProgressIndicator(color: tdBlueLight,));
+            return const Center(
+                child: CircularProgressIndicator(color: tdBlueLight));
           }
+          if (featureProvider.features.isEmpty) {
+            return Center(
+              child: Text(
+                'No Rent added yet',
+                style: TextStyle(
+                    fontSize: 15.sp,
+                    color: tdBlueLight,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
+
           return ListView.builder(
             controller: _scrollController,
             itemCount: featureProvider.features.length +
                 (featureProvider.hasMoreData ? 1 : 0),
             itemBuilder: (context, index) {
               if (index == featureProvider.features.length) {
-                return const Center(child: CircularProgressIndicator(color: tdBlueLight,));
+                return const Center(
+                    child: CircularProgressIndicator(color: tdBlueLight));
               }
               final feature = featureProvider.features[index];
               return FeatureCard(feature: feature);

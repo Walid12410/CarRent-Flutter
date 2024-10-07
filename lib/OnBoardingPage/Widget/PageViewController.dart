@@ -27,7 +27,7 @@ class PageViewContainer extends StatelessWidget {
             height: 250.h,
             width: double.infinity,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20).w,
+              borderRadius: BorderRadius.circular(15).w,
               child: Image.asset(
                 imagePath,
                 fit: BoxFit.fill,

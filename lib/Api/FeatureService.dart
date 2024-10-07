@@ -7,7 +7,7 @@ class FeatureService {
 
   Future<List<Feature>> fetchFeature(int currentPage,String currentTime) async {
     try {
-      final response = await http.get(Uri.parse('${ApiEndpoints.apiUrl}/api/feature?pageNumber=$currentPage&currentTime=$currentTime'));
+      final response = await http.get(Uri.parse('${ApiEndpoints.apiUrl}/api/feature?pageNumber=$currentPage&limitPage=5&currentTime=$currentTime'));
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);
         List<Feature> featureList = jsonData.map((json) => Feature.fromJson(json)).toList();
