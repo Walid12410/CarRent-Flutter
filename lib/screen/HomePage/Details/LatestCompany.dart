@@ -6,13 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-
-
 class LatestCompanyCard extends StatelessWidget {
   const LatestCompanyCard({
     super.key,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +22,7 @@ class LatestCompanyCard extends StatelessWidget {
         padding: const EdgeInsets.only(left: 20).w,
         child: Row(
           children: [
-            for(Company companyList in latestCompany)
+            for (Company companyList in latestCompany)
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,31 +34,48 @@ class LatestCompanyCard extends StatelessWidget {
                       width: 250.w,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15).w,
-                        child: CachedNetworkImage(
-                          imageUrl: companyList.imageCompany!.image.url,
-                          fit: BoxFit.fill,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) =>
-                              CircularProgressIndicator(value: downloadProgress.progress, color: tdBlueLight,),
-                          errorWidget:
-                              (context, url, error) =>
-                          const Icon(Icons.error),
+                        child: Builder(
+                          builder: (context) {
+                            final defaultImage = companyList.imageCompany
+                                ?.firstWhere((image) => image.isDefaultImage);
+                            if (defaultImage == null) {
+                              return const Icon(Icons.error);
+                            }
+                            return CachedNetworkImage(
+                              imageUrl: defaultImage.image.url,
+                              fit: BoxFit.fill,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) =>
+                                      CircularProgressIndicator(
+                                value: downloadProgress.progress,
+                                color: tdBlueLight,
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            );
+                          },
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 5.h,),
+                  SizedBox(
+                    height: 5.h,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 5).w,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${companyList.companyName} - ${companyList.carCount} Cars',style: TextStyle(fontSize: 12.sp,color: tdBlueLight,
-                            fontWeight: FontWeight.bold),),
+                        Text(
+                          '${companyList.companyName} - ${companyList.carCount} Cars',
+                          style: TextStyle(
+                              fontSize: 12.sp,
+                              color: tdBlueLight,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                   )
-
                 ],
               )
           ],
@@ -70,5 +84,3 @@ class LatestCompanyCard extends StatelessWidget {
     );
   }
 }
-
-

@@ -1,7 +1,7 @@
 import 'package:carrent/Api/CarService.dart';
 import 'package:carrent/model/Car/CarModel.dart';
+import 'package:carrent/model/CarDetails/CarDetailsModel.dart';
 import 'package:flutter/foundation.dart';
-
 
 class CarProvider with ChangeNotifier {
   CarService car = CarService();
@@ -22,4 +22,11 @@ class CarProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  CarDetails? _carDetails;
+  CarDetails? get carDetails => _carDetails;
+  getCarDetails(String carId) async {
+    final res = await car.fetchOneCar(carId);
+    _carDetails = res;
+    notifyListeners();
+  }
 }

@@ -11,7 +11,7 @@ class Company {
   final int carCount;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final ImageCompany? imageCompany;
+  final List<ImageCompany>? imageCompany;
 
   Company({
     required this.id,
@@ -39,7 +39,9 @@ class Company {
       carCount: json['carCount'] ?? 0,
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.parse(json['updatedAt'] ?? DateTime.now().toIso8601String()),
-      imageCompany: json['imageCompany'] != null ? ImageCompany.fromJson(json['imageCompany']) : null,
+      imageCompany: (json['imageCompany'] as List<dynamic>?)
+              ?.map((imageJson) => ImageCompany.fromJson(imageJson))
+              .toList() ?? [],
     );
   }
 }

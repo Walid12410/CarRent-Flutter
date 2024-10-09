@@ -1,6 +1,7 @@
 import 'package:carrent/screen/Authentication/LogIn/LogInPage.dart';
 import 'package:carrent/screen/Authentication/Register/SignUpPage.dart';
 import 'package:carrent/screen/CarCategoryPage/CategoryPage.dart';
+import 'package:carrent/screen/CarDetailsPage/CarDetailsPage.dart';
 import 'package:carrent/screen/HomePage/HomePage.dart';
 import 'package:carrent/screen/OnBoardingPage/PageView.dart';
 import 'package:carrent/screen/ProfilePage/ProfilePage.dart';
@@ -137,6 +138,15 @@ class AppNavigation {
         builder: (context, state) => PromotionDetailsPage(
           key: state.pageKey,
           promoId: state.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/carDetails/:id',
+        name: "CarDetails",
+        builder: (context, state) => CarDetailsPage(
+          key: state.pageKey,
+          carId: state.pathParameters['id']!,
         ),
       ),
     ],
