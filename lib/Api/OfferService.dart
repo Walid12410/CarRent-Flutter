@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:carrent/model/Offer/OfferModel.dart';
 import 'package:http/http.dart' as http;
-import '../ApiEndPoint.dart';
+import '../core/ApiEndPoint.dart';
 
 
 class OfferService{

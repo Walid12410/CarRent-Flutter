@@ -1,5 +1,5 @@
 import 'package:carrent/Api/PromoService.dart';
-import 'package:carrent/Time/CurrentTime.dart';
+import 'package:carrent/core/Time/CurrentTime.dart';
 import 'package:carrent/model/Promo/PromoDetailsModel.dart';
 import 'package:carrent/model/Promo/PromoModel.dart';
 import 'package:flutter/foundation.dart';

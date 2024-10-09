@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../ApiEndPoint.dart';
+import '../core/ApiEndPoint.dart';
 import 'package:carrent/model/Company/CompanyModel.dart';
 
 class CompanyService {
