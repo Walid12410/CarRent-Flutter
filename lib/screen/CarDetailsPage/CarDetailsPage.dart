@@ -65,7 +65,8 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                       ),
                       CarHostView(carData: carData),
                       SizedBox(height: 10.h,),
-                      Text('Review (40)',style: TextStyle(fontSize: 12.sp,color: tdBlueLight,fontWeight: FontWeight.w500),)
+                      Text('Review (${carData.averageRating})',style: TextStyle(fontSize: 12.sp,color: tdBlueLight,fontWeight: FontWeight.w500),),
+                      
                     ],
                   ),
                 )
