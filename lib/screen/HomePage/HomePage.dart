@@ -8,6 +8,7 @@ import 'package:carrent/provider/Promo_Provider.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'Details/HeaderPage.dart';
 import 'Details/LatestCar.dart';
@@ -148,7 +149,10 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(height: 10.h),
                               const LatestCompanyCard(),
                               SizedBox(height: 15.h),
-                              const SectionTitle(title: 'Limited Offer', actionText: 'See more'),
+                              SectionTitle(title: 'Limited Offer', actionText: 'See all', onActionTap: (){
+                                GoRouter.of(context).pushNamed('LimitedOffer');
+                              }  
+                              ),
                               SizedBox(height: 10.h),
                               const TopOfferCard(),
                               SizedBox(height: 50.h,),

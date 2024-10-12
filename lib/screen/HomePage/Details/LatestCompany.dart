@@ -4,6 +4,7 @@ import 'package:carrent/model/Company/CompanyModel.dart';
 import 'package:carrent/provider/Company_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class LatestCompanyCard extends StatelessWidget {
@@ -29,31 +30,36 @@ class LatestCompanyCard extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(right: 10).w,
-                    child: SizedBox(
-                      height: 100.h,
-                      width: 250.w,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15).w,
-                        child: Builder(
-                          builder: (context) {
-                            final defaultImage = companyList.imageCompany
-                                ?.firstWhere((image) => image.isDefaultImage);
-                            if (defaultImage == null) {
-                              return const Icon(Icons.error);
-                            }
-                            return CachedNetworkImage(
-                              imageUrl: defaultImage.image.url,
-                              fit: BoxFit.fill,
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) =>
-                                      CircularProgressIndicator(
-                                value: downloadProgress.progress,
-                                color: tdBlueLight,
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                            );
-                          },
+                    child: GestureDetector(
+                      onTap: () {
+                        GoRouter.of(context).pushNamed('CompanyDetails',pathParameters: {'id': companyList.id.toString()});
+                      },
+                      child: SizedBox(
+                        height: 100.h,
+                        width: 250.w,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15).w,
+                          child: Builder(
+                            builder: (context) {
+                              final defaultImage = companyList.imageCompany
+                                  ?.firstWhere((image) => image.isDefaultImage);
+                              if (defaultImage == null) {
+                                return const Icon(Icons.error);
+                              }
+                              return CachedNetworkImage(
+                                imageUrl: defaultImage.image.url,
+                                fit: BoxFit.fill,
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) =>
+                                        CircularProgressIndicator(
+                                  value: downloadProgress.progress,
+                                  color: tdBlueLight,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),

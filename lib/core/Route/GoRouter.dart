@@ -2,7 +2,9 @@ import 'package:carrent/screen/Authentication/LogIn/LogInPage.dart';
 import 'package:carrent/screen/Authentication/Register/SignUpPage.dart';
 import 'package:carrent/screen/CarCategoryPage/CategoryPage.dart';
 import 'package:carrent/screen/CarDetailsPage/CarDetailsPage.dart';
+import 'package:carrent/screen/CompanyDetailsPage/CompanyDetailsPage.dart';
 import 'package:carrent/screen/HomePage/HomePage.dart';
+import 'package:carrent/screen/LimitedOfferPage/LimitedOfferPage.dart';
 import 'package:carrent/screen/OnBoardingPage/PageView.dart';
 import 'package:carrent/screen/ProfilePage/ProfilePage.dart';
 import 'package:carrent/screen/PromotionDetailsPage/PromotionDetailsPage.dart';
@@ -46,11 +48,38 @@ class AppNavigation {
             navigatorKey: _shellNavigatorHome,
             routes: <RouteBase>[
               GoRoute(
-                path: "/home",
-                name: "Home",
-                builder: (BuildContext context, GoRouterState state) =>
-                    const HomePage(),
-              ),
+                  path: "/home",
+                  name: "Home",
+                  builder: (BuildContext context, GoRouterState state) =>
+                      const HomePage(),
+                  routes: [
+                    GoRoute(
+                      path: 'LimitedOffer',
+                      name: 'LimitedOffer',
+                      pageBuilder: (context, state) =>
+                          CustomTransitionPage<void>(
+                        key: state.pageKey,
+                        child: const LimitedOfferPage(),
+                        transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) =>
+                            FadeTransition(opacity: animation, child: child),
+                      ),
+                    ),
+                    GoRoute(
+                      path: 'CompanyDetails/:id',
+                      name: 'CompanyDetails',
+                      pageBuilder: (context, state) =>
+                          CustomTransitionPage<void>(
+                        key: state.pageKey,
+                        child: CompanyDetailsPage(
+                          companyId: state.pathParameters['id']!,
+                        ),
+                        transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) =>
+                            FadeTransition(opacity: animation, child: child),
+                      ),
+                    ),
+                  ]),
             ],
           ),
           StatefulShellBranch(

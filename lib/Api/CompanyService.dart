@@ -23,4 +23,21 @@ class CompanyService {
       throw Exception('Server Error');
     }
   }
+
+  Future<Company> fetchOneCompany(String companyId) async {
+    try {
+      final response = await http.get(Uri.parse('${ApiEndpoints.apiUrl}/api/company/list/$companyId'));
+      if(response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        Company company = Company.fromJson(jsonData);
+        return company;
+      } else {
+        showToast('Falid to fetch company');
+        throw Exception('Failed to load data.');
+      }
+    } catch (e) {
+      showToast('Server Error');
+      throw Exception('Server Error $e');
+    }
+  }
 }

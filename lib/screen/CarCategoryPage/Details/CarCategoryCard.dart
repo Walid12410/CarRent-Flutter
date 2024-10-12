@@ -49,7 +49,7 @@ class CarCategoryCard extends StatelessWidget {
               fontSize: 15.sp,
               color: tdBlueLight),
         ),
-        SizedBox(height: 10.h),
+        SizedBox(height: 5.h),
         Padding(
           padding: const EdgeInsets.only(left: 5, right: 5).w,
           child: Row(
