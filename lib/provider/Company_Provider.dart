@@ -13,6 +13,15 @@ class CompanyProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  List<Company> _allCompanies = [];
+  List<Company> get allCompanies => _allCompanies;
+  getAllCompany() async {
+    final res = await service.fetchAllCompany();
+    _allCompanies = res;
+    notifyListeners();
+  }
+
+
   Company? _companyDetails;
   Company? get companyDetails => _companyDetails;
   getCompanyDetails(String companyId) async {

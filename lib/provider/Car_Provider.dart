@@ -4,12 +4,12 @@ import 'package:carrent/model/CarDetails/CarDetailsModel.dart';
 import 'package:flutter/foundation.dart';
 
 class CarProvider with ChangeNotifier {
-  CarService car = CarService();
+  CarService service = CarService();
 
   List<Car> _latestCar = [];
   List<Car> get latestCar => _latestCar;
   getLatestCar() async {
-    final res = await car.fetchLatestCar(1);
+    final res = await service.fetchLatestCar(1);
     _latestCar = res;
     notifyListeners();
   }
@@ -17,7 +17,7 @@ class CarProvider with ChangeNotifier {
   List<Car> _categoryCar = [];
   List<Car> get categoryCar => _categoryCar;
   getCategoryCar(int pageNumber, String categoryId) async {
-    final res = await car.fetchCarCategory(pageNumber, categoryId);
+    final res = await service.fetchCarCategory(pageNumber, categoryId);
     _categoryCar = res;
     notifyListeners();
   }
@@ -25,8 +25,57 @@ class CarProvider with ChangeNotifier {
   CarDetails? _carDetails;
   CarDetails? get carDetails => _carDetails;
   getCarDetails(String carId) async {
-    final res = await car.fetchOneCar(carId);
+    final res = await service.fetchOneCar(carId);
     _carDetails = res;
     notifyListeners();
   }
+
+
+  List<Car> _latestCompanyCar = [];
+  List<Car> get latestCompanyCar => _latestCompanyCar;
+  getLatestCompanyCar(String companyId, int pageNumber ) async {
+    final res = await service.fetchCompanyCars(companyId, pageNumber, 5);
+    _latestCompanyCar = res;
+    notifyListeners();
+  }
+
+  // Company Car pagination
+  final List<Car> _cars = [];
+  bool _isLoading = false;
+  int _currentPage = 2;
+  final int _perPage = 5;
+  bool _hasMoreData = true;
+
+  List<Car> get cars => _cars;
+  bool get isLoading => _isLoading;
+  bool get hasMoreData => _hasMoreData;
+
+  Future<void> fetchCars(String companyId) async {
+    if(_isLoading || !_hasMoreData) return;
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      List<Car> newCars = await service.fetchCompanyCars(companyId, _currentPage, 5);
+      if(newCars.length < _perPage){
+        _hasMoreData = false;
+      } else {
+        _currentPage++;
+      }
+      _cars.addAll(newCars);
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void resetCompanyCar() {
+    _cars.clear();
+    _currentPage = 1;
+    _hasMoreData = true;
+    notifyListeners();
+  }
+
 }

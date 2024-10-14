@@ -1,17 +1,17 @@
 import "package:cached_network_image/cached_network_image.dart";
 import 'package:carrent/core/Color/color.dart';
-import "package:carrent/model/Feature/FeatureModel.dart";
+import "package:carrent/model/Car/CarModel.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 
 
-class FeatureCard extends StatelessWidget {
-  const FeatureCard({
+class CarCard extends StatelessWidget {
+  const CarCard({
     super.key,
-    required this.feature,
+    required this.car,
   });
 
-  final Feature feature;
+  final Car car;
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +34,8 @@ class FeatureCard extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15).w,
                   child: CachedNetworkImage(
-                    imageUrl: (feature.car?.carImage != null &&
-                            feature.car!.carImage.isNotEmpty)
-                        ? feature.car!.carImage[0].carImage.url
+                    imageUrl: (car.carImage.isNotEmpty)
+                        ? car.carImage[0].carImage.url
                         : 'https://www.its.ac.id/tmesin/wp-content/uploads/sites/22/2022/07/no-image.png',
                     fit: BoxFit.fill,
                     progressIndicatorBuilder:
@@ -54,7 +53,7 @@ class FeatureCard extends StatelessWidget {
                 height: 5.h,
               ),
               Text(
-                '${feature.car!.carMake} ${feature.car!.carModel} - ${feature.car!.year}',
+                '${car.carMake} ${car.carModel} - ${car.year}',
                 style: TextStyle(
                     fontSize: 15.sp,
                     color: tdBlueLight,
@@ -72,14 +71,14 @@ class FeatureCard extends StatelessWidget {
                     color: Colors.yellow,
                   ),
                   Text(
-                    '${feature.car!.averageRating}',
+                    '${car.averageRating}',
                     style: TextStyle(
                         fontSize: 12.sp,
                         color: tdBlueLight,
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    ' (${feature.car!.reviewCount} review)',
+                    ' (${car.reviewCount} review)',
                     style: TextStyle(fontSize: 12.sp, color: tdGrey),
                   )
                 ],
@@ -88,7 +87,7 @@ class FeatureCard extends StatelessWidget {
                 height: 5.h,
               ),
               Text(
-                ' \$${feature.car!.rentPrice} / day',
+                ' \$${car.rentPrice} / day',
                 style: TextStyle(
                     fontSize: 12.sp,
                     color: tdBlueLight,

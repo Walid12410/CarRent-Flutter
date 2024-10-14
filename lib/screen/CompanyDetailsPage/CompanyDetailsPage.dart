@@ -1,8 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carrent/Widget/Car/CarCard.dart';
 import "package:carrent/core/Color/color.dart";
+import "package:carrent/model/Car/CarModel.dart";
+import "package:carrent/provider/Car_Provider.dart";
 import "package:carrent/provider/Company_Provider.dart";
+import "package:carrent/screen/CompanyDetailsPage/Details/CompanyImages.dart";
+import "package:carrent/screen/CompanyDetailsPage/Details/CompanyProfileHeader.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
 import "package:provider/provider.dart";
 
 class CompanyDetailsPage extends StatefulWidget {
@@ -25,13 +30,17 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
 
   Future<void> _fetchData() async {
     final company = Provider.of<CompanyProvider>(context, listen: false);
-    company.getCompanyDetails(widget.companyId);
+    final car = Provider.of<CarProvider>(context, listen: false);
+    await car.getLatestCompanyCar(widget.companyId, 1);
+    await company.getCompanyDetails(widget.companyId);
   }
 
   @override
   Widget build(BuildContext context) {
     final company = Provider.of<CompanyProvider>(context, listen: true);
+    final car = Provider.of<CarProvider>(context, listen: true);
     var companyData = company.companyDetails;
+    var latestCars = car.latestCompanyCar;
 
     return Scaffold(
       backgroundColor: tdWhite,
@@ -70,7 +79,6 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
                 ),
               );
             } else {
-              // Check if imageCompany list exists and is not empty
               final defaultImage = companyData.imageCompany?.isNotEmpty == true
                   ? companyData.imageCompany!.firstWhere(
                       (image) => image.isDefaultImage,
@@ -88,177 +96,81 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Stack(
-                      alignment: Alignment.bottomCenter,
-                      clipBehavior:
-                          Clip.none, // To allow profile image to overflow
-                      children: <Widget>[
-                        SizedBox(
-                          width: double.infinity,
-                          height: 150.h, // Height of the cover image
-                          child: secondImage != null
-                              ? CachedNetworkImage(
-                                  imageUrl: secondImage.image.url,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                )
-                              : Container(
-                                  color: tdGrey,
-                                  height: 150.h), // Placeholder if no image
-                        ),
-                        // Profile Image
-                        Positioned(
-                          bottom: -50.0
-                              .w, // Push the image up from the bottom of the Stack
-                          child: CircleAvatar(
-                            radius: 50.0.w,
-                            backgroundColor: tdWhite,
-                            child: defaultImage != null
-                                ? CachedNetworkImage(
-                                    imageUrl: defaultImage.image.url,
-                                    imageBuilder: (context, imageProvider) =>
-                                        Container(
-                                      width: 120.w,
-                                      height: 200.h,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: tdWhite, width: 2.w),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
+                    CompanyImageStack(
+                        secondImage: secondImage, defaultImage: defaultImage),
+                    SizedBox(height: 45.h),
+                    CompanyProfileHeader(companyData: companyData),
+                    const Divider(
+                      color: tdGrey,
+                      thickness: 2,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20).w,
+                      child: Text(
+                        'Company cars (${companyData.carCount})',
+                        style: TextStyle(
+                            fontSize: 15.sp,
+                            color: tdBlueLight,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    latestCars.isNotEmpty
+                        ? Column(
+                            children: [
+                              for (Car car in latestCars) CarCard(car: car),
+                              companyData.carCount > 5
+                                  ? Center(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          GoRouter.of(context).pushNamed(
+                                              'CompanyCarDetails',
+                                              pathParameters: {
+                                                "id": companyData.id
+                                              });
+                                        },
+                                        child: Container(
+                                          height: 35.h,
+                                          width: 150.w,
+                                          decoration: BoxDecoration(
+                                              color: tdBlueLight,
+                                              borderRadius:
+                                                  BorderRadius.circular(10).w),
+                                          child: Center(
+                                              child: Text(
+                                            'Show more',
+                                            style: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: tdWhite),
+                                          )),
                                         ),
                                       ),
-                                    ),
-                                    placeholder: (context, url) => const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
-                                  )
-                                : const Icon(
-                                    Icons.error), // Placeholder if no image
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 45.h),
-                    Column(
-                        children: [
-                          Text(
-                            companyData.companyName,
-                            style: TextStyle(
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.bold,
-                              color: tdBlueLight,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            companyData.companyEmail,
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              color: tdGrey,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                                    )
+                                  : Container(),
+                              SizedBox(
+                                height: 15.h,
+                              )
+                            ],
+                          )
+                        : Column(
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.location_on_rounded,
-                                      color: tdBlue,
-                                      size: 40.w,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Company Location',
-                                    style: TextStyle(
-                                      fontSize: 10.sp,
-                                      color: tdBlueLight,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
+                              SizedBox(
+                                height: 40.h,
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.support_agent,
-                                      color: tdBlue,
-                                      size: 40.w,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Support Service',
-                                    style: TextStyle(
-                                      fontSize: 10.sp,
+                              Center(
+                                child: Text(
+                                  'No car added yet for this company',
+                                  style: TextStyle(
+                                      fontSize: 12.sp,
                                       color: tdBlueLight,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              // Third column for Company Details
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.assessment_rounded,
-                                      color: tdBlue,
-                                      size: 40.w,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Company Details',
-                                    style: TextStyle(
-                                      fontSize: 10.sp,
-                                      color: tdBlueLight,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ],
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                        ],
-                      ),
-                      const Divider(color: tdGrey,thickness: 2,),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20,right: 20).w,
-                      child: Column(
-                        children: [
-                           Text(
-                            'Company cars (${companyData.carCount})',
-                            style: TextStyle(
-                                fontSize: 15.sp,
-                                color: tdBlueLight,
-                                fontWeight: FontWeight.bold),
                           )
-                      
-                        ],
-                      ),
-                    )
-
                   ],
                 ),
               );

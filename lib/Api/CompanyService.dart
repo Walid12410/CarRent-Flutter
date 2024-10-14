@@ -40,4 +40,23 @@ class CompanyService {
       throw Exception('Server Error $e');
     }
   }
+
+    Future<List<Company>> fetchAllCompany() async {
+    try {
+      final response = await http.get(Uri.parse('${ApiEndpoints.apiUrl}/api/company/list'));
+      if(response.statusCode == 200) {
+        final List<dynamic> jsonData = json.decode(response.body);
+        List<Company> companies =
+            jsonData.map((json) => Company.fromJson(json)).toList();
+        return companies;
+      } else {
+        showToast('Falid to fetch company');
+        throw Exception('Failed to load data.');
+      }
+    } catch (e) {
+      showToast('Server Error');
+      throw Exception('Server Error $e');
+    }
+  }
+
 }

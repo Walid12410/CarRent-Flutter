@@ -16,7 +16,7 @@ class CarService {
             jsonData.map((json) => Car.fromJson(json)).toList();
         return latestCar;
       } else {
-        showToast('Failed to latest car ${response.statusCode}');
+        showToast('Failed to latest car');
         throw Exception('Failed to load latest car');
       }
     } catch (e) {
@@ -35,7 +35,7 @@ class CarService {
             jsonData.map((json) => Car.fromJson(json)).toList();
         return latestPromo;
       } else {
-        showToast('Failed to category car ${response.statusCode}');
+        showToast('Failed to category cars');
         throw Exception('Failed to load category car');
       }
     } catch (e) {
@@ -53,12 +53,32 @@ class CarService {
         CarDetails carDetails = CarDetails.fromJson(jsonData);
         return carDetails;
       } else {
-        showToast('Failed to car details ${response.statusCode}');
+        showToast('Failed to car details');
         throw Exception('Failed to load data.');
       }
     } catch (e) {
       showToast('Server Error');
       throw Exception('Server Error $e');
+    }
+  }
+
+  Future<List<Car>> fetchCompanyCars(
+      String companyId, int pageNumber, int carPerPage) async {
+    try {
+      final response = await http.get(Uri.parse(
+          '${ApiEndpoints.apiUrl}/api/car-rent?company=$companyId&companyPageNumber=$pageNumber&companyLimitPage=$carPerPage'));
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = json.decode(response.body);
+        List<Car> companyCar =
+            jsonData.map((json) => Car.fromJson(json)).toList();
+        return companyCar;
+      } else {
+        showToast('Failed to cars');
+        throw Exception('Failed to load data.');
+      }
+    } catch (e) {
+      showToast('Server Error');
+      throw Exception(e);
     }
   }
 }
