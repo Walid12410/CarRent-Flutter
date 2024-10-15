@@ -2,21 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:carrent/core/Color/color.dart';
 import 'package:carrent/model/Car/CarModel.dart';
-import 'package:carrent/provider/Car_Provider.dart';
 
-class LatestCarCard extends StatelessWidget {
-  const LatestCarCard({
-    super.key,
-  });
+class CarDisplayCard extends StatelessWidget {
+  const CarDisplayCard({super.key, required this.carData});
+
+  final List<Car> carData;
 
   @override
   Widget build(BuildContext context) {
-    final car = Provider.of<CarProvider>(context, listen: true);
-    var latestCar = car.latestCar;
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
@@ -24,7 +19,7 @@ class LatestCarCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            for (Car carList in latestCar)
+            for (Car carList in carData)
               GestureDetector(
                 onTap: () {
                   GoRouter.of(context).pushNamed('CarDetails',
@@ -84,7 +79,7 @@ class LatestCarCard extends StatelessWidget {
                             color: Colors.yellow,
                           ),
                           Text(
-                            '${carList.averageRating}',
+                            carList.averageRating.toStringAsFixed(1),
                             style: TextStyle(
                                 fontSize: 10.sp,
                                 color: tdBlueLight,

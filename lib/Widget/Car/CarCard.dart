@@ -3,7 +3,7 @@ import 'package:carrent/core/Color/color.dart';
 import "package:carrent/model/Car/CarModel.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
-
+import "package:go_router/go_router.dart";
 
 class CarCard extends StatelessWidget {
   const CarCard({
@@ -16,10 +16,11 @@ class CarCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20,top: 5).w,
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 5).w,
       child: GestureDetector(
-        onTap: (){
-          //
+        onTap: () {
+          GoRouter.of(context).pushNamed('CarDetails',
+              pathParameters: {'id': car.id.toString()});
         },
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

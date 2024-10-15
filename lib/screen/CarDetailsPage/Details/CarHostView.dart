@@ -4,7 +4,6 @@ import "package:carrent/model/CarDetails/CarDetailsModel.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 
-
 class CarHostView extends StatelessWidget {
   const CarHostView({
     super.key,
@@ -37,6 +36,10 @@ class CarHostView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12).w,
                 child: Builder(
                   builder: (context) {
+                    if (carData.company!.imageCompany == null ||
+                        carData.company!.imageCompany!.isEmpty) {
+                      return const Icon(Icons.error);
+                    }
                     final defaultImage = carData.company!.imageCompany
                         ?.firstWhere((image) => image.isDefaultImage);
                     if (defaultImage == null) {
@@ -97,4 +100,3 @@ class CarHostView extends StatelessWidget {
     );
   }
 }
-

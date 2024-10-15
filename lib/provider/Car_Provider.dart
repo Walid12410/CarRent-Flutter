@@ -30,14 +30,23 @@ class CarProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   List<Car> _latestCompanyCar = [];
   List<Car> get latestCompanyCar => _latestCompanyCar;
-  getLatestCompanyCar(String companyId, int pageNumber ) async {
+  getLatestCompanyCar(String companyId, int pageNumber) async {
     final res = await service.fetchCompanyCars(companyId, pageNumber, 5);
     _latestCompanyCar = res;
     notifyListeners();
   }
+
+  List<Car> _topRatedCar = [];
+  List<Car> get topRatedCar => _topRatedCar;
+  getTopRatedCar(int pageNumber, int carPerPage) async {
+    final res = await service.fetchTopRated(pageNumber, carPerPage);
+    _topRatedCar = res;
+    notifyListeners();
+  }
+
+
 
   // Company Car pagination
   final List<Car> _cars = [];
@@ -51,18 +60,23 @@ class CarProvider with ChangeNotifier {
   bool get hasMoreData => _hasMoreData;
 
   Future<void> fetchCars(String companyId) async {
-    if(_isLoading || !_hasMoreData) return;
+    if (_isLoading || !_hasMoreData) return;
     _isLoading = true;
     notifyListeners();
 
     try {
-      List<Car> newCars = await service.fetchCompanyCars(companyId, _currentPage, 5);
-      if(newCars.length < _perPage){
+      List<Car> newCars =
+          await service.fetchCompanyCars(companyId, _currentPage, 5);
+      if (newCars.length < _perPage) {
         _hasMoreData = false;
       } else {
         _currentPage++;
       }
-      _cars.addAll(newCars);
+      for (var car in newCars) {
+        if (!_cars.any((existingCar) => existingCar.id == car.id)) {
+          _cars.add(car);
+        }
+      }
     } catch (e) {
       throw Exception(e);
     } finally {
@@ -73,9 +87,8 @@ class CarProvider with ChangeNotifier {
 
   void resetCompanyCar() {
     _cars.clear();
-    _currentPage = 1;
+    _currentPage = 2;
     _hasMoreData = true;
     notifyListeners();
   }
-
 }

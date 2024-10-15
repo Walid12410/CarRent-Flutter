@@ -1,5 +1,5 @@
-import 'package:carrent/screen/Authentication/LogIn/LogInPage.dart';
-import 'package:carrent/screen/Authentication/Register/SignUpPage.dart';
+import 'package:carrent/screen/AuthenticationPages/LogIn/LogInPage.dart';
+import 'package:carrent/screen/AuthenticationPages/Register/SignUpPage.dart';
 import 'package:carrent/screen/CarCategoryPage/CategoryPage.dart';
 import 'package:carrent/screen/CarDetailsPage/CarDetailsPage.dart';
 import 'package:carrent/screen/CompanyCarListPage/CompanyCarList.dart';

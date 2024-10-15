@@ -1,6 +1,6 @@
 import "package:carrent/core/Color/color.dart";
 import "package:carrent/provider/Company_Provider.dart";
-import "package:carrent/screen/CompanyCarListPage/Details/CompanyListItem.dart";
+import 'package:carrent/screen/CompanyListPage/Details/CompanyListItem.dart';
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:go_router/go_router.dart";

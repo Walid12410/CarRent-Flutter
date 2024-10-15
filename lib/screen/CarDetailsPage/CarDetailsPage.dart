@@ -36,10 +36,11 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
   Widget build(BuildContext context) {
     final car = Provider.of<CarProvider>(context, listen: true);
     var carData = car.carDetails;
-    if (carData == null) {
+    
+    if (carData == null || carData.id != widget.carId) {
       return const Center(
         child: CircularProgressIndicator(
-          color: tdBlack,
+          color: tdBlueLight,
         ),
       );
     }

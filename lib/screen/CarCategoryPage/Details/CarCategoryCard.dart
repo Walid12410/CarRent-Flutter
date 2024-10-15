@@ -25,8 +25,7 @@ class CarCategoryCard extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15).w,
             child: CachedNetworkImage(
-              imageUrl: (car.carImage != Null &&
-                      car.carImage.isNotEmpty)
+              imageUrl: (car.carImage.isNotEmpty)
                   ? car.carImage[0].carImage.url
                   : 'https://www.its.ac.id/tmesin/wp-content/uploads/sites/22/2022/07/no-image.png',
               fit: BoxFit.fill,
@@ -71,7 +70,7 @@ class CarCategoryCard extends StatelessWidget {
                     color: Colors.yellow,
                   ),
                   Text(
-                    '${car.averageRating}',
+                    car.averageRating.toStringAsFixed(1),
                     style: TextStyle(
                         fontSize: 10.sp,
                         color: tdBlueLight,
