@@ -42,7 +42,7 @@ class CarCategoryCard extends StatelessWidget {
         ),
         SizedBox(height: 5.h),
         Text(
-          '${car.carMake} ${car.carModel} - ${car.year}',
+          '${car.carMake.carMakeName} ${car.carModel} - ${car.year}',
           style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 15.sp,

@@ -65,7 +65,7 @@ class OfferLimitCard extends StatelessWidget {
                 height: 2.h,
               ),
               Text(
-                '${offer.car!.carType} ${offer.car!.carModel} - ${offer.car!.year}',
+                '${offer.car!.carMake.carMakeName} ${offer.car!.carModel} - ${offer.car!.year}',
                 style: TextStyle(
                     fontSize: 15.sp,
                     color: tdBlueLight,

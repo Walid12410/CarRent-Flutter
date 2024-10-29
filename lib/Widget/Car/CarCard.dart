@@ -54,7 +54,7 @@ class CarCard extends StatelessWidget {
                 height: 5.h,
               ),
               Text(
-                '${car.carMake} ${car.carModel} - ${car.year}',
+                '${car.carMake.carMakeName} ${car.carModel} - ${car.year}',
                 style: TextStyle(
                     fontSize: 15.sp,
                     color: tdBlueLight,

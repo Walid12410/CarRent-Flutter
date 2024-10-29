@@ -60,7 +60,7 @@ class CarDisplayCard extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 5).w,
                         child: Text(
-                          '${carList.carType} ${carList.carModel} - ${carList.year}',
+                          '${carList.carMake.carMakeName} ${carList.carModel} - ${carList.year}',
                           style: TextStyle(
                               fontSize: 12.sp,
                               color: tdBlueLight,

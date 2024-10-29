@@ -25,10 +25,10 @@ class CarService {
     }
   }
 
-  Future<List<Car>> fetchCarCategory(int pageNumber, String categoryId) async {
+  Future<List<Car>> fetchCarCategory(int pageNumber, String categoryId,int carPerPage) async {
     try {
       final response = await http.get(Uri.parse(
-          '${ApiEndpoints.apiUrl}/api/car-rent?pageNumberCat=$pageNumber&category=$categoryId'));
+          '${ApiEndpoints.apiUrl}/api/car-rent?pageNumberCat=$pageNumber&category=$categoryId&categoryPerPage=$carPerPage'));
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);
         List<Car> latestPromo =
