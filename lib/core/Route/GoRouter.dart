@@ -1,5 +1,6 @@
 import 'package:carrent/screen/AuthenticationPages/LogIn/LogInPage.dart';
 import 'package:carrent/screen/AuthenticationPages/Register/SignUpPage.dart';
+import 'package:carrent/screen/CarCategoryListPage/CarCategoryListPage.dart';
 import 'package:carrent/screen/CarCategoryPage/CategoryPage.dart';
 import 'package:carrent/screen/CarDetailsPage/CarDetailsPage.dart';
 import 'package:carrent/screen/CompanyCarListPage/CompanyCarList.dart';
@@ -19,7 +20,7 @@ import 'package:go_router/go_router.dart';
 class AppNavigation {
   AppNavigation._();
 
-  static String initial = "/onBoarding";
+  static String initial = "/logIn";
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
   static final _shellNavigatorHome =
@@ -118,8 +119,21 @@ class AppNavigation {
                 name: "Category",
                 builder: (BuildContext context, GoRouterState state) =>
                     const CarCategoryPage(),
-                // routes: [
-                // ],
+                routes: [
+                  GoRoute(
+                    path: 'CarCategoryList/:id',
+                    name: 'CarCategoryList',
+                    pageBuilder: (context, state) => CustomTransitionPage<void>(
+                      key: state.pageKey,
+                      child: CarCategoryListPage(
+                        categoryId: state.pathParameters['id']!,
+                      ),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) =>
+                              FadeTransition(opacity: animation, child: child),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -1,3 +1,5 @@
+import 'package:carrent/Api/AuthenticationService.dart';
+import 'package:carrent/Widget/ToastError.dart';
 import 'package:carrent/core/Color/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +13,34 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  bool isLoading = false;
+
+  void checkLogin(userEmail, userPassword) async {
+    Authentication service = Authentication();
+    setState(() {
+      isLoading = true;
+    });
+    bool isLogin = await service.login(userEmail, userPassword);
+    try {
+      if (isLogin) {
+        setState(() {
+          GoRouter.of(context).go('/home');
+        });
+      } else {
+        email.clear();
+        password.clear();
+      }
+    } catch (e) {
+      showToast('Something went wrong, check you connection');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +94,7 @@ class _LogInPageState extends State<LogInPage> {
                     padding: const EdgeInsets.all(5).w, // Add padding for text
                     child: TextField(
                       cursorColor: tdGrey,
+                      controller: email,
                       decoration: InputDecoration(
                         border:
                             InputBorder.none, // Removes the default underline
@@ -93,19 +124,17 @@ class _LogInPageState extends State<LogInPage> {
                       borderRadius: BorderRadius.circular(12).w,
                       border: Border.all(color: tdGrey)),
                   child: Padding(
-                    padding: const EdgeInsets.all(5).w, // Add padding for text
+                    padding: const EdgeInsets.all(5).w,
                     child: TextField(
                       cursorColor: tdGrey,
+                      controller: password,
+                      obscureText: true,
                       decoration: InputDecoration(
-                        border:
-                            InputBorder.none, // Removes the default underline
-                        hintText: 'Your password', // Placeholder text
-                        hintStyle: TextStyle(
-                            color: tdGrey,
-                            fontSize: 12.sp), // Style for hint text
+                        border: InputBorder.none,
+                        hintText: 'Your password',
+                        hintStyle: TextStyle(color: tdGrey, fontSize: 12.sp),
                       ),
-                      textInputAction:
-                          TextInputAction.done, // Adjust action as needed
+                      textInputAction: TextInputAction.done,
                     ),
                   ),
                 ),
@@ -114,7 +143,7 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    context.push("/home");
+                    checkLogin(email.text, password.text);
                   },
                   child: Container(
                     width: double.infinity,
@@ -124,7 +153,7 @@ class _LogInPageState extends State<LogInPage> {
                         color: tdBlueLight),
                     child: Center(
                         child: Text(
-                      'Login',
+                      isLoading ? 'checking...' : 'Login',
                       style: TextStyle(
                           fontSize: 15.sp,
                           color: tdWhite,
@@ -159,7 +188,7 @@ class _LogInPageState extends State<LogInPage> {
                     ),
                     TextButton(
                         onPressed: () {
-                         context.push("/signUp");
+                          context.push("/signUp");
                         },
                         child: Text(
                           'Register',
