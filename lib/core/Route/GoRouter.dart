@@ -20,7 +20,7 @@ import 'package:go_router/go_router.dart';
 class AppNavigation {
   AppNavigation._();
 
-  static String initial = "/logIn";
+  static String initial = "/signUp";
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
   static final _shellNavigatorHome =

@@ -1,5 +1,5 @@
 import 'package:carrent/Api/AuthenticationService.dart';
-import 'package:carrent/Widget/ToastError.dart';
+import 'package:carrent/Widget/Toast/ToastError.dart';
 import 'package:carrent/core/Color/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -142,9 +142,11 @@ class _LogInPageState extends State<LogInPage> {
                   height: 20.h,
                 ),
                 GestureDetector(
-                  onTap: () {
-                    checkLogin(email.text, password.text);
-                  },
+                  onTap: isLoading
+                      ? null
+                      : () {
+                          checkLogin(email.text, password.text);
+                        },
                   child: Container(
                     width: double.infinity,
                     height: 40.h,
