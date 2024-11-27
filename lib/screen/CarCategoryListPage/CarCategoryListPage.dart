@@ -17,7 +17,8 @@ class CarCategoryListPage extends StatefulWidget {
 
 class _CarCategoryListPageState extends State<CarCategoryListPage> {
   late ScrollController _scrollController;
- late CarProvider carsProvider;
+  late CarProvider carsProvider;
+
   @override
   void initState() {
     super.initState();
@@ -132,7 +133,8 @@ class _CarCategoryListPageState extends State<CarCategoryListPage> {
               final car = carProvider.categoryCars[index];
               return Padding(
                 padding: const EdgeInsets.only(
-                        left: 20, right: 20, top: 5, bottom: 10).w,
+                        left: 20, right: 20, top: 5, bottom: 10)
+                    .w,
                 child: CarCategoryCard(car: car),
               );
             });

@@ -93,7 +93,6 @@ class CarProvider with ChangeNotifier {
     _cars.clear();
     _currentPage = 2;
     _hasMoreData = true;
-    notifyListeners();
   }
 
 

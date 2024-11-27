@@ -17,14 +17,14 @@ class CompanyCarList extends StatefulWidget {
 
 class _CompanyCarListState extends State<CompanyCarList> {
   late ScrollController _scrollController;
+  late CarProvider carsProvider;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<CarProvider>(context, listen: false)
-          .fetchCars(widget.companyId);
+      carsProvider.fetchCars(widget.companyId);
     });
   }
 
@@ -36,10 +36,16 @@ class _CompanyCarListState extends State<CompanyCarList> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    carsProvider = Provider.of<CarProvider>(context, listen: false);
+  }
+
+  @override
   void dispose() {
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
-    Provider.of<CarProvider>(context, listen: false).resetCompanyCar();
+    carsProvider.restCarCategory();
     super.dispose();
   }
 
