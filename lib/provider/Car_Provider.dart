@@ -17,11 +17,13 @@ class CarProvider with ChangeNotifier {
   List<Car> _categoryCar = [];
   List<Car> get categoryCar => _categoryCar;
   getCategoryCar(int pageNumber, String categoryId) async {
-    final res = await service.fetchCarCategory(pageNumber, categoryId,3);
+    final res = await service.fetchCarCategory(pageNumber, categoryId,5);
     _categoryCar = res;
+    print(_categoryCar.length);
     notifyListeners();
   }
 
+  // Car details
   CarDetails? _carDetails;
   CarDetails? get carDetails => _carDetails;
   getCarDetails(String carId) async {
@@ -30,6 +32,7 @@ class CarProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // latest compamy car
   List<Car> _latestCompanyCar = [];
   List<Car> get latestCompanyCar => _latestCompanyCar;
   getLatestCompanyCar(String companyId, int pageNumber) async {
@@ -38,6 +41,7 @@ class CarProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // toprated car
   List<Car> _topRatedCar = [];
   List<Car> get topRatedCar => _topRatedCar;
   getTopRatedCar(int pageNumber, int carPerPage) async {
@@ -91,4 +95,50 @@ class CarProvider with ChangeNotifier {
     _hasMoreData = true;
     notifyListeners();
   }
+
+
+
+  // Category Car pagination
+  final List<Car> _categoryCars = [];
+  bool _isLoadingCatCar = false;
+  int _currentPageCatCar = 2;
+  final int _catCarPerPage = 5;
+  bool _catCarHasMoreData = true;
+
+  List<Car> get categoryCars => _categoryCars;
+  bool get isLoadingCatCar => _isLoadingCatCar;
+  bool get catCarHasMoreData => _catCarHasMoreData;
+
+  Future<void> fetchCategoryCar(String categoryId) async {
+    if (_isLoadingCatCar || !_catCarHasMoreData) return;
+    _isLoadingCatCar = true;
+    notifyListeners();
+
+    try {
+      List<Car> newCars =
+          await service.fetchCarCategory(_currentPageCatCar, categoryId, _catCarPerPage);
+      if (newCars.length < _catCarPerPage) {
+        _catCarHasMoreData = false;
+      } else {
+        _currentPageCatCar++;
+      }
+      for (var car in newCars) {
+        if (!_categoryCars.any((existingCar) => existingCar.id == car.id)) {
+          _categoryCars.add(car);
+        }
+      }
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      _isLoadingCatCar = false;
+      notifyListeners();
+    }
+  }
+
+  void restCarCategory() {
+    _categoryCars.clear();
+    _currentPageCatCar = 2;
+    _catCarHasMoreData = true;
+  }
+
 }
