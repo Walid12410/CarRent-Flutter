@@ -6,10 +6,10 @@ import 'package:http/http.dart' as http;
 import '../core/ApiEndPoint.dart';
 
 class CarService {
-  Future<List<Car>> fetchLatestCar(int pageNumber) async {
+  Future<List<Car>> fetchLatestCar(int pageNumber,int currentPage) async {
     try {
       final response = await http.get(Uri.parse(
-          '${ApiEndpoints.apiUrl}/api/car-rent?pageNumber=$pageNumber'));
+          '${ApiEndpoints.apiUrl}/api/car-rent?pageNumber=$pageNumber&perPage=$currentPage'));
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);
         List<Car> latestCar =

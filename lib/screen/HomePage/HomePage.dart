@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     final company = Provider.of<CompanyProvider>(context, listen: false);
     final offer = Provider.of<OfferProvider>(context, listen: false);
     await offer.getTopOffer(currentTime);
-    await car.getLatestCar();
+    await car.getTopLatestCar();
     await promo.getLatestPromo(1, currentTime, 3);
     await company.getLastCompany();
     await car.getTopRatedCar(1, 4);
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
     final car = Provider.of<CarProvider>(context, listen: true);
     var latestPromo = promo.latestPromo;
     var topRatedCar = car.topRatedCar;
-    var latestCar = car.latestCar;
+    var latestCar = car.topLatestCar;
 
     return Scaffold(
       backgroundColor: tdWhite,
@@ -159,9 +159,13 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                               height: 15.h,
                             ),
-                            const SectionTitle(
+                             SectionTitle(
                                 title: 'Latest Vehicle',
-                                actionText: 'See more'),
+                                actionText: 'See more',
+                                onActionTap: (){
+                                  GoRouter.of(context).pushNamed('LatestCar');
+
+                                },),
                             SizedBox(height: 10.h),
                             CarDisplayCard(carData: latestCar),
                             SizedBox(height: 15.h),

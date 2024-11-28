@@ -6,11 +6,11 @@ import 'package:flutter/foundation.dart';
 class CarProvider with ChangeNotifier {
   CarService service = CarService();
 
-  List<Car> _latestCar = [];
-  List<Car> get latestCar => _latestCar;
-  getLatestCar() async {
-    final res = await service.fetchLatestCar(1);
-    _latestCar = res;
+  List<Car> _topLatestCar = [];
+  List<Car> get topLatestCar => _topLatestCar;
+  getTopLatestCar() async {
+    final res = await service.fetchLatestCar(1, 5);
+    _topLatestCar = res;
     notifyListeners();
   }
 
@@ -139,5 +139,50 @@ class CarProvider with ChangeNotifier {
     _currentPageCatCar = 2;
     _catCarHasMoreData = true;
   }
+
+
+  // Latest Car pagination
+  final List<Car> _latestCars = [];
+  bool _latestCarLoading = false;
+  int _latestCarCurrentPage = 2;
+  final int _latestCarPerPage = 5;
+  bool _latestCarHasMoreData = true;
+
+  List<Car> get latestCars => _latestCars;
+  bool get latestCarLoading => _latestCarLoading;
+  bool get latestCarHasMoreData => _latestCarHasMoreData;
+
+  Future<void> fetchLatestCars() async {
+    if (_latestCarLoading || !_latestCarHasMoreData) return;
+    _latestCarLoading = true;
+    notifyListeners();
+
+    try {
+      List<Car> newCars =
+          await service.fetchLatestCar(_latestCarCurrentPage,_latestCarPerPage);
+      if (newCars.length < _latestCarPerPage) {
+        _latestCarHasMoreData = false;
+      } else {
+        _latestCarCurrentPage++;
+      }
+      for (var car in newCars) {
+        if (!_latestCars.any((existingCar) => existingCar.id == car.id)) {
+          _latestCars.add(car);
+        }
+      }
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      _latestCarLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void restLatestCar() {
+    _latestCars.clear();
+    _latestCarCurrentPage = 2;
+    _latestCarHasMoreData = true;
+  }
+
 
 }

@@ -7,6 +7,7 @@ import 'package:carrent/screen/CompanyCarListPage/CompanyCarList.dart';
 import 'package:carrent/screen/CompanyDetailsPage/CompanyDetailsPage.dart';
 import 'package:carrent/screen/CompanyListPage/CompanyListPage.dart';
 import 'package:carrent/screen/HomePage/HomePage.dart';
+import 'package:carrent/screen/LatestCarPageList/LatestCarPage.dart';
 import 'package:carrent/screen/LimitedOfferPage/LimitedOfferPage.dart';
 import 'package:carrent/screen/OnBoardingPage/PageView.dart';
 import 'package:carrent/screen/ProfilePage/ProfilePage.dart';
@@ -103,6 +104,18 @@ class AppNavigation {
                         child: CompanyCarList(
                           companyId: state.pathParameters['id']!,
                         ),
+                        transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) =>
+                            FadeTransition(opacity: animation, child: child),
+                      ),
+                    ),
+                    GoRoute(
+                      path: 'LatestCar',
+                      name: 'LatestCar',
+                      pageBuilder: (context, state) =>
+                          CustomTransitionPage<void>(
+                        key: state.pageKey,
+                        child: const LatestCarPage(),
                         transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) =>
                             FadeTransition(opacity: animation, child: child),
