@@ -1,6 +1,7 @@
 import 'package:carrent/core/Color/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 
 class HeaderPage extends StatelessWidget {
@@ -44,7 +45,9 @@ class HeaderPage extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    GoRouter.of(context).goNamed("Search");
+                  },
                   icon: Icon(Icons.search_rounded, size: 22.w, color: tdGrey)),
               IconButton(
                   onPressed: () {},

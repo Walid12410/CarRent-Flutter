@@ -15,6 +15,7 @@ import 'package:carrent/screen/PromotionDetailsPage/PromotionDetailsPage.dart';
 import 'package:carrent/screen/PromotionPage/PromotionPage.dart';
 import 'package:carrent/screen/RentWayPage/RentWayPage.dart';
 import 'package:carrent/core/NavigationButton/NavBar.dart';
+import 'package:carrent/screen/SearchPage/SearchPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
@@ -116,6 +117,18 @@ class AppNavigation {
                           CustomTransitionPage<void>(
                         key: state.pageKey,
                         child: const LatestCarPage(),
+                        transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) =>
+                            FadeTransition(opacity: animation, child: child),
+                      ),
+                    ),
+                    GoRoute(
+                      path: 'Search',
+                      name: 'Search',
+                      pageBuilder: (context, state) =>
+                          CustomTransitionPage<void>(
+                        key: state.pageKey,
+                        child: const SearchPage(),
                         transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) =>
                             FadeTransition(opacity: animation, child: child),
