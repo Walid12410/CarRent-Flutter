@@ -3,6 +3,7 @@ import 'package:carrent/Widget/Toast/ToastError.dart';
 import 'package:carrent/Widget/Toast/ToastSuccess.dart';
 import 'package:carrent/Widget/Toast/ToastValidation.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../core/ApiEndPoint.dart';
 
 class Authentication {
@@ -15,17 +16,23 @@ class Authentication {
           headers: {'Content-Type': 'application/json'}, body: body);
 
       final responseBody = jsonDecode(response.body);
-
       if (response.statusCode == 200) {
-        // @TODO save the user data in shareprefrence
+        // Save user data locally using sharedPreferences library
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('userId',responseBody['_id']);
+        prefs.setString('userToken',responseBody['token']);
+        prefs.setBool('isLoggedIn', true);
+        // login success
         showSucessToast('Success');
         return true;
       } else {
+        // falid to login . send error message
         showValidationToast(responseBody['message']);
         return false;
       }
     } catch (e) {
       showToast('Something went wrong, check you connection');
+      print(e);
       return false;
     }
   }

@@ -4,13 +4,22 @@ import 'package:carrent/provider/Company_Provider.dart';
 import 'package:carrent/provider/Feature_Provider.dart';
 import 'package:carrent/provider/Offer_Provider.dart';
 import 'package:carrent/provider/Promo_Provider.dart';
+import 'package:carrent/provider/User_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'core/Route/GoRouter.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Fetch isLoggedIn status
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+  // Set the initial route based on the login status
+  AppNavigation.setInitialRoute(isLoggedIn);
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => PromoProvider()),
@@ -19,6 +28,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => CategoryProvider()),
       ChangeNotifierProvider(create: (_) => OfferProvider()),
       ChangeNotifierProvider(create: (_) => FeatureProvider()),
+      ChangeNotifierProvider(create: (_) => UserProvider())
     ],
     child: const MyApp(),
   ));

@@ -16,7 +16,7 @@ class CarDetails {
   final String mileage;
   final String fuelType;
   final String transmission;
-  final String rentPrice;
+  final double rentPrice;
   final String categoryId;
   final String createdAt;
   final String updatedAt;
@@ -65,7 +65,7 @@ factory CarDetails.fromJson(Map<String, dynamic> json) {
     mileage: json['mileage'] ?? '',
     fuelType: json['fuelType'] ?? '',
     transmission: json['transmission'] ?? '',
-    rentPrice: json['rentPrice'] ?? '',
+    rentPrice: (json['rentPrice'] ?? 0).toDouble(),
     categoryId: json['categoryId'] ?? '',
     createdAt: json['createdAt'] ?? '',
     updatedAt: json['updatedAt'] ?? '',

@@ -28,10 +28,7 @@ class _LogInPageState extends State<LogInPage> {
         setState(() {
           GoRouter.of(context).go('/home');
         });
-      } else {
-        email.clear();
-        password.clear();
-      }
+      } 
     } catch (e) {
       showToast('Something went wrong, check you connection');
     } finally {

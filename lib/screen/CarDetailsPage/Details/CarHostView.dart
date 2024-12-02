@@ -3,6 +3,7 @@ import "package:carrent/core/Color/color.dart";
 import "package:carrent/model/CarDetails/CarDetailsModel.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
 
 class CarHostView extends StatelessWidget {
   const CarHostView({
@@ -87,7 +88,10 @@ class CarHostView extends StatelessWidget {
             const Spacer(),
             IconButton(
                 onPressed: () {
-                  // nav to company details
+                  GoRouter.of(context).pushNamed(
+                    'companydetils',
+                    pathParameters: {'id': carData.company!.id.toString()},
+                  );
                 },
                 icon: Icon(
                   Icons.arrow_outward_outlined,

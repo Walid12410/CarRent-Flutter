@@ -16,15 +16,14 @@ import 'package:carrent/screen/PromotionPage/PromotionPage.dart';
 import 'package:carrent/screen/RentWayPage/RentWayPage.dart';
 import 'package:carrent/core/NavigationButton/NavBar.dart';
 import 'package:carrent/screen/SearchPage/SearchPage.dart';
+import 'package:carrent/screen/UpdateProfilePage/UpdateProfilePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
 class AppNavigation {
   AppNavigation._();
 
-  static String initial = "/home";
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
-
   static final _shellNavigatorHome =
       GlobalKey<NavigatorState>(debugLabel: 'shellHome');
   static final _shellNavigatorCategory =
@@ -35,6 +34,12 @@ class AppNavigation {
       GlobalKey<NavigatorState>(debugLabel: 'shellProfile');
   static final _shellNavigatorCoupons =
       GlobalKey<NavigatorState>(debugLabel: 'shellCoupons');
+
+  static String initial = "/onBoarding"; // Default to Onboarding initially.
+  // Set the initial route based on isLoggedIn passed from main()
+  static void setInitialRoute(bool isLoggedIn) {
+    initial = isLoggedIn ? "/home" : "/onBoarding";
+  }
 
   static final GoRouter router = GoRouter(
     initialLocation: initial,
@@ -184,8 +189,19 @@ class AppNavigation {
                 name: "Profile",
                 builder: (BuildContext context, GoRouterState state) =>
                     const ProfilePage(),
-                // routes: [
-                // ],
+                routes: [
+                  GoRoute(
+                    path: 'ProfileUpdate',
+                    name: 'ProfileUpdate',
+                    pageBuilder: (context, state) => CustomTransitionPage<void>(
+                      key: state.pageKey,
+                      child: const UpdateProfilePage(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) =>
+                              FadeTransition(opacity: animation, child: child),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -211,6 +227,14 @@ class AppNavigation {
         builder: (context, state) => LogInPage(
           key: state.pageKey,
         ),
+      ),
+      GoRoute(
+        path: '/companydetils/:id', // Using path parameters for dynamic content
+        name: 'companydetils',
+        builder: (context, state) {
+          final companyId = state.pathParameters['id']!;
+          return CompanyDetailsPage(companyId: companyId);
+        },
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
