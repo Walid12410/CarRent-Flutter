@@ -23,7 +23,7 @@ class PageViewContainer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 250.h,
+            height: 220.h,
             width: double.infinity,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15).w,

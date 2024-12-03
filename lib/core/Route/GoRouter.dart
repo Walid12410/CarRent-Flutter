@@ -3,6 +3,7 @@ import 'package:carrent/screen/AuthenticationPages/Register/SignUpPage.dart';
 import 'package:carrent/screen/CarCategoryListPage/CarCategoryListPage.dart';
 import 'package:carrent/screen/CarCategoryPage/CategoryPage.dart';
 import 'package:carrent/screen/CarDetailsPage/CarDetailsPage.dart';
+import 'package:carrent/screen/ChangePasswordPage/ChangePasswordPage.dart';
 import 'package:carrent/screen/CompanyCarListPage/CompanyCarList.dart';
 import 'package:carrent/screen/CompanyDetailsPage/CompanyDetailsPage.dart';
 import 'package:carrent/screen/CompanyListPage/CompanyListPage.dart';
@@ -196,6 +197,17 @@ class AppNavigation {
                     pageBuilder: (context, state) => CustomTransitionPage<void>(
                       key: state.pageKey,
                       child: const UpdateProfilePage(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) =>
+                              FadeTransition(opacity: animation, child: child),
+                    ),
+                  ),
+                 GoRoute(
+                    path: 'PasswordUpdate',
+                    name: 'PasswordUpdate',
+                    pageBuilder: (context, state) => CustomTransitionPage<void>(
+                      key: state.pageKey,
+                      child: const ChangePasswordPage(),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) =>
                               FadeTransition(opacity: animation, child: child),

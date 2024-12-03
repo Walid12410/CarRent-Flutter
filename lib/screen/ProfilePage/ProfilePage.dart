@@ -93,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 15).w,
+        padding: const EdgeInsets.only(bottom: 15,left: 8,right: 8).w,
         child: BottomAppBar(
           surfaceTintColor: tdWhite,
           color: tdWhite,

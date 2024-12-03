@@ -1,20 +1,22 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:carrent/core/Color/color.dart";
-import "package:carrent/model/User/UserModel.dart";
+import "package:carrent/provider/User_Provider.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:provider/provider.dart";
 
 
 class PhotoUploadCard extends StatelessWidget {
   const PhotoUploadCard({
     super.key,
-    required this.userDetails,
   });
 
-  final User? userDetails;
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context, listen: true);
+    var userDetails = user.userDetails;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

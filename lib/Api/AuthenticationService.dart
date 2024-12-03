@@ -32,7 +32,6 @@ class Authentication {
       }
     } catch (e) {
       showToast('Something went wrong, check you connection');
-      print(e);
       return false;
     }
   }
