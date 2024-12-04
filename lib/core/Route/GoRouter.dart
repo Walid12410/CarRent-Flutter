@@ -10,6 +10,7 @@ import 'package:carrent/screen/CompanyListPage/CompanyListPage.dart';
 import 'package:carrent/screen/HomePage/HomePage.dart';
 import 'package:carrent/screen/LatestCarPageList/LatestCarPage.dart';
 import 'package:carrent/screen/LimitedOfferPage/LimitedOfferPage.dart';
+import 'package:carrent/screen/MapPage/MapPage.dart';
 import 'package:carrent/screen/OnBoardingPage/PageView.dart';
 import 'package:carrent/screen/ProfilePage/ProfilePage.dart';
 import 'package:carrent/screen/PromotionDetailsPage/PromotionDetailsPage.dart';
@@ -140,6 +141,18 @@ class AppNavigation {
                             FadeTransition(opacity: animation, child: child),
                       ),
                     ),
+                    GoRoute(
+                      path: 'GoogleMap',
+                      name: 'GoogleMap',
+                      pageBuilder: (context, state) =>
+                          CustomTransitionPage<void>(
+                        key: state.pageKey,
+                        child: const GoogleMapScreen(),
+                        transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) =>
+                            FadeTransition(opacity: animation, child: child),
+                      ),
+                    ),
                   ]),
             ],
           ),
@@ -202,7 +215,7 @@ class AppNavigation {
                               FadeTransition(opacity: animation, child: child),
                     ),
                   ),
-                 GoRoute(
+                  GoRoute(
                     path: 'PasswordUpdate',
                     name: 'PasswordUpdate',
                     pageBuilder: (context, state) => CustomTransitionPage<void>(

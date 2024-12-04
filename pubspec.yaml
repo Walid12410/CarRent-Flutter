@@ -47,6 +47,9 @@ dependencies:
   fluttertoast: ^8.2.5
   smooth_page_indicator: ^1.2.0+3
   shared_preferences: ^2.2.3
+  google_maps_flutter: ^2.5.3
+  flutter_cache_manager: ^3.3.1
+  image: ^4.3.0
 
 dev_dependencies:
   flutter_test:
