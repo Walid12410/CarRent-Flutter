@@ -20,7 +20,7 @@ class CarDetailView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${carData.carMake} ${carData.carModel} - ${carData.year}',
+          '${carData.carMake.carMakeName} ${carData.carModel} - ${carData.year}',
           style: TextStyle(
               fontSize: 17.sp, color: tdBlueLight, fontWeight: FontWeight.bold),
         ),
@@ -101,7 +101,7 @@ class CarDetailView extends StatelessWidget {
                   height: 5.h,
                 ),
                 Text(
-                  carData.carType,
+                  carData.carMake.carMakeName,
                   style: TextStyle(
                       fontSize: 12.sp,
                       color: tdBlueLight,

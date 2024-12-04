@@ -161,20 +161,22 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
         surfaceTintColor: tdWhite,
         color: tdWhite,
         child: Padding(
-          padding: const EdgeInsets.only(left: 20).w,
+          padding: const EdgeInsets.only(left: 15).w,
           child: Row(children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('${carData.carMake} ${carData.carModel} - ${carData.year}',style: TextStyle(
-                  fontSize: 15.sp,color: tdBlueLight,fontWeight: FontWeight.bold
-                ),),
-                Text('\$${carData.rentPrice} / day',style: TextStyle(
-                  fontSize: 15.sp,color: tdBlue,fontWeight: FontWeight.bold
-                ),)
-
-              ],
+            SizedBox(
+              width: 150.w,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${carData.carMake.carMakeName} ${carData.carModel} - ${carData.year}',style: TextStyle(
+                    fontSize: 15.sp,color: tdBlueLight,fontWeight: FontWeight.bold
+                  ),overflow: TextOverflow.ellipsis,),
+                  Text('\$${carData.rentPrice} / day',style: TextStyle(
+                    fontSize: 15.sp,color: tdBlue,fontWeight: FontWeight.bold
+                  ),)
+                ],
+              ),
             ),
             SizedBox(width: 30.w,),
             Expanded(child: GestureDetector(

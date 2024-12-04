@@ -1,7 +1,9 @@
 import 'package:carrent/model/Company/CompanyModel.dart';
 import 'package:carrent/provider/Company_Provider.dart';
+import 'package:carrent/screen/MapPage/Details/CompanyCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -20,7 +22,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   final LatLng _initialPosition = const LatLng(33.888630, 35.495480);
   Set<Marker> _markers = {};
   Company? _selectedCompany; // To store the selected company
-  bool _isDetailsVisible = false; // Control the visibility of the company details
+  bool _isDetailsVisible =
+      false; // Control the visibility of the company details
 
   @override
   void initState() {
@@ -44,7 +47,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           icon: markerIcon,
           infoWindow: InfoWindow(
             title: '${company.companyName} - ${company.carCount} cars',
-            snippet: company.companyEmail,
+            snippet: 'More details',
             onTap: () {
               _onMarkerTapped(company); // Handle marker tap
             },
@@ -74,7 +77,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
       return BitmapDescriptor.fromBytes(resizedBytes);
     } catch (e) {
-      return BitmapDescriptor.defaultMarker; // Fallback to default marker if the image fails to load
+      return BitmapDescriptor
+          .defaultMarker; // Fallback to default marker if the image fails to load
     }
   }
 
@@ -113,6 +117,10 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
               return GoogleMap(
                 onMapCreated: _onMapCreated,
+                mapToolbarEnabled: false, // Disable map toolbar
+                zoomControlsEnabled: false, // Disable zoom controls
+                myLocationButtonEnabled: false, // Disable the location button
+
                 initialCameraPosition: CameraPosition(
                   target: _initialPosition,
                   zoom: 13.0,
@@ -123,41 +131,12 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           ),
           if (_isDetailsVisible && _selectedCompany != null)
             Positioned(
-              bottom: 20,
-              left: 10,
-              right: 10,
+              bottom: 15.w,
+              left: 20.w,
+              right: 20.w,
               child: GestureDetector(
                 onTap: _hideCompanyDetails, // Hide details on tap outside
-                child: Container(
-                  padding: EdgeInsets.all(16),
-                  color: Colors.white,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _selectedCompany?.companyName ?? '',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Email: ${_selectedCompany?.companyEmail ?? ''}',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Cars Available: ${_selectedCompany?.carCount ?? 0}',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 16),
-                      _selectedCompany?.imageCompany != null
-                          ? Image.network(_selectedCompany!.imageCompany![0].image.url)
-                          : Container(), // Show the company image if available
-                    ],
-                  ),
-                ),
+                child: CompanyCard(selectedCompany: _selectedCompany),
               ),
             ),
         ],

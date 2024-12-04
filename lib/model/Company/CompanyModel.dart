@@ -5,9 +5,9 @@ class Company {
   final String companyName;
   final String companyEmail;
   final String companyPhoneNumber;
-  final String companyAddress;
+  final String companyCountry;
   final String companyCity;
-  final String companyState;
+  final String companyAddress;
   final double longitude;
   final double latitude;
   final int carCount;
@@ -22,7 +22,7 @@ class Company {
     required this.companyPhoneNumber,
     required this.companyAddress,
     required this.companyCity,
-    required this.companyState,
+    required this.companyCountry,
     required this.longitude,
     required this.latitude,
     required this.carCount,
@@ -37,9 +37,9 @@ class Company {
       companyName: json['companyName'] ?? '',
       companyEmail: json['companyEmail'] ?? '',
       companyPhoneNumber: json['CompanyPhoneNumber'] ?? '',
-      companyAddress: json['CompanyAddress'] ?? '',
-      companyCity: json['CompanyCity'] ?? '',
-      companyState: json['CompanyState'] ?? '',
+      companyAddress: json['address'] ?? '',
+      companyCity: json['city'] ?? '',
+      companyCountry: json['country'] ?? '',
       latitude: (json['latitude'] ?? 0.0).toDouble(),
       longitude: (json['longitude'] ?? 0.0).toDouble(),
       carCount: json['carCount'] ?? 0,

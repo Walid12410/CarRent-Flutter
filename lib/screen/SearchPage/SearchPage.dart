@@ -232,7 +232,7 @@ class _SearchPageState extends State<SearchPage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    GoRouter.of(context).goNamed('GoogleMap');
+                     context.push(context.namedLocation('GoogleMap'));
                   },
                   child: Row(children: [
                     Icon(
