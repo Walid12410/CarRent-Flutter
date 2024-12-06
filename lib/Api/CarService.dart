@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:carrent/Widget/Toast/ToastError.dart';
+import 'package:carrent/model/Car/CarMakeModel.dart';
 import 'package:carrent/model/Car/CarModel.dart';
 import 'package:carrent/model/CarDetails/CarDetailsModel.dart';
 import 'package:http/http.dart' as http;
@@ -100,4 +101,23 @@ class CarService {
       throw Exception(e);
     }
   }
+
+  Future<List<CarMake>> fetchCarMake() async {
+    try {
+      final response = await http
+          .get(Uri.parse('${ApiEndpoints.apiUrl}/api/car-make'));
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = json.decode(response.body);
+        List<CarMake> carMake = jsonData.map((json) => CarMake.fromJson(json)).toList();
+        return carMake;
+      } else {
+        showToast('Failed to cars make');
+        throw Exception('Failed to load data.');
+      }
+    } catch (e) {
+      showToast('Server Error');
+      throw Exception(e);
+    }
+  }
+
 }

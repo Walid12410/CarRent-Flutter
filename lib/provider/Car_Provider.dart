@@ -1,4 +1,5 @@
 import 'package:carrent/Api/CarService.dart';
+import 'package:carrent/model/Car/CarMakeModel.dart';
 import 'package:carrent/model/Car/CarModel.dart';
 import 'package:carrent/model/CarDetails/CarDetailsModel.dart';
 import 'package:flutter/foundation.dart';
@@ -6,6 +7,17 @@ import 'package:flutter/foundation.dart';
 class CarProvider with ChangeNotifier {
   CarService service = CarService();
 
+
+  // fetch car make
+  List<CarMake> _carMake = [];
+  List<CarMake> get carMake => _carMake;
+  getAllCarMake() async {
+    final res = await service.fetchCarMake();
+    _carMake = res;
+    notifyListeners();
+  }
+
+  // latest car
   List<Car> _topLatestCar = [];
   List<Car> get topLatestCar => _topLatestCar;
   getTopLatestCar() async {
@@ -14,6 +26,7 @@ class CarProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // latest cars category
   List<Car> _categoryCar = [];
   List<Car> get categoryCar => _categoryCar;
   getCategoryCar(int pageNumber, String categoryId) async {

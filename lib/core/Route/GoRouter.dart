@@ -11,6 +11,7 @@ import 'package:carrent/screen/HomePage/HomePage.dart';
 import 'package:carrent/screen/LatestCarPageList/LatestCarPage.dart';
 import 'package:carrent/screen/LimitedOfferPage/LimitedOfferPage.dart';
 import 'package:carrent/screen/MapPage/MapPage.dart';
+import 'package:carrent/screen/NotificationPage/NotificationPage.dart';
 import 'package:carrent/screen/OnBoardingPage/PageView.dart';
 import 'package:carrent/screen/ProfilePage/ProfilePage.dart';
 import 'package:carrent/screen/PromotionDetailsPage/PromotionDetailsPage.dart';
@@ -124,6 +125,18 @@ class AppNavigation {
                           CustomTransitionPage<void>(
                         key: state.pageKey,
                         child: const LatestCarPage(),
+                        transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) =>
+                            FadeTransition(opacity: animation, child: child),
+                      ),
+                    ),
+                    GoRoute(
+                      path: 'Notification',
+                      name: 'Notification',
+                      pageBuilder: (context, state) =>
+                          CustomTransitionPage<void>(
+                        key: state.pageKey,
+                        child: const NotificationPage(),
                         transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) =>
                             FadeTransition(opacity: animation, child: child),

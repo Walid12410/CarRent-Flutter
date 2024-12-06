@@ -1,3 +1,6 @@
+import 'package:carrent/Api/UserService.dart';
+import 'package:carrent/Widget/Toast/ToastError.dart';
+import 'package:carrent/Widget/Toast/ToastValidation.dart';
 import 'package:carrent/core/Color/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,8 +14,38 @@ class ChangePasswordPage extends StatefulWidget {
 }
 
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
+  final TextEditingController _newPassword = TextEditingController();
+  final TextEditingController _retypePassword = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
+  bool isLoading = false;
+
+
+  void submitHandler(password) async {
+    UserService service = UserService();
+    setState(() {
+      isLoading = true;
+    });
+    if(password == ""){
+      showValidationToast('can not take empty field');
+      return;
+    }
+
+    try {
+      bool isUpdated = await service.updatePassword(password);
+      if(isUpdated) {
+        setState(() {
+         context.pop();
+        });
+      } 
+    } catch (e) {
+      showToast('Something went wrong');
+    } finally{
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +101,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     child: TextField(
                       cursorColor: tdGrey,
                       obscureText: !_isPasswordVisible, // Control visibility
+                      controller: _newPassword,
                       style: TextStyle(
                         color: tdBlueLight,
                         fontWeight: FontWeight.w500,
@@ -115,6 +149,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     child: TextField(
                       cursorColor: tdGrey,
                       obscureText: !_isConfirmPasswordVisible, // Control visibility
+                      controller: _retypePassword,
                       style: TextStyle(
                         color: tdBlueLight,
                         fontWeight: FontWeight.w500,
@@ -155,8 +190,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           color: tdWhite,
           height: 55.h,
           child: GestureDetector(
-            onTap: () {
-              // Implement your password change logic
+            onTap:isLoading ? null : () {
+              if(_newPassword.text != _retypePassword.text){
+                showToast('Password not match');
+                return;
+              }
+
+              submitHandler(_newPassword.text);
             },
             child: Container(
               height: 40.h,
@@ -167,7 +207,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
               child: Center(
                 child: Text(
-                  'Change password',
+                 isLoading? 'Updating...' : 'Change password',
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: tdWhite,

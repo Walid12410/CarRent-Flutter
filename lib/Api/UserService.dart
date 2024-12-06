@@ -63,4 +63,40 @@ class UserService {
       return false;
     }
   }
+
+  Future<bool> updatePassword(String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('userToken') ?? '';
+    String id = prefs.getString('userId') ?? "";
+
+    try {
+      final body = jsonEncode({
+        'password': password,
+      });
+
+      final response = await http.put(
+          Uri.parse('${ApiEndpoints.apiUrl}/api/user/profile/$id'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+          body: body);
+
+      final responseBody = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        showSucessToast('Password updated Successfully');
+        return true;
+      } else if (response.statusCode == 400) {
+        showToast(responseBody['message']);
+        return false;
+      } else {
+        showToast(responseBody['message']);
+        return false;
+      }
+    } catch (e) {
+      showToast('Something went wrong, check you connection');
+      return false;
+    }
+  }
 }

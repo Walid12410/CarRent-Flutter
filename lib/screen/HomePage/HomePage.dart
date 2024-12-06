@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                 } else if (snapshot.hasError) {
                   return Center(
                     child: Text(
-                      'Something went wrong, check your connection.${snapshot.error}',
+                      'Something went wrong, check your connection.',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15.sp,
