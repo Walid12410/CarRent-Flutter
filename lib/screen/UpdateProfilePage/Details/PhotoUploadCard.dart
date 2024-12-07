@@ -30,7 +30,7 @@ class PhotoUploadCard extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: userDetails!.photo!.url.isEmpty
                     ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
-                    : userDetails!.photo!.url,
+                    : userDetails.photo!.url,
                 fit: BoxFit.fill,
                 progressIndicatorBuilder:
                     (context, url, downloadProgress) =>

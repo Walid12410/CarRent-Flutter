@@ -81,7 +81,7 @@ class CompanyCard extends StatelessWidget {
                       GestureDetector(
                         onTap: () async {
                           await URLLauncher.openMap(_selectedCompany!.latitude,
-                              _selectedCompany!.longitude);
+                              _selectedCompany.longitude);
                         },
                         child: Icon(
                           Icons.assistant_direction,
@@ -92,7 +92,7 @@ class CompanyCard extends StatelessWidget {
                       GestureDetector(
                         onTap: () async {
                           await URLLauncher.openMap(_selectedCompany!.latitude,
-                              _selectedCompany!.longitude);
+                              _selectedCompany.longitude);
                         },
                         child: Text(
                           ' Direct location',

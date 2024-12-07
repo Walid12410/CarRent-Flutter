@@ -117,8 +117,9 @@ class _PromotionDetailsPageState extends State<PromotionDetailsPage> {
                           description: promoData.promoDescription),
                       SizedBox(height: 20.h),
                       TermsAndConditions(
-                        discountAmount: promoData.discountAmount,
                         discountPercentage: promoData.discountPercentage,
+                        companyId: promoData.company!.id,
+                        companyName: promoData.company!.companyName,
                       ),
                     ],
                   ),

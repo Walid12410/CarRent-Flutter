@@ -1,16 +1,18 @@
 import 'package:carrent/core/Color/color.dart';
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
-
+import "package:go_router/go_router.dart";
 
 class TermsAndConditions extends StatelessWidget {
   const TermsAndConditions(
       {super.key,
-      required this.discountAmount,
-      required this.discountPercentage});
+      required this.discountPercentage,
+      required this.companyId,
+      required this.companyName});
 
-  final int discountAmount;
   final int discountPercentage;
+  final String companyName;
+  final String companyId;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class TermsAndConditions extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '- Minimum rent of \$$discountAmount',
+                  '- Used one times',
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: tdGrey,
@@ -50,6 +52,42 @@ class TermsAndConditions extends StatelessWidget {
                     color: tdGrey,
                     fontWeight: FontWeight.w400,
                   ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      '- Valid for ',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: tdGrey,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        GoRouter.of(context).pushNamed(
+                          'companydetils',
+                          pathParameters: {'id': companyId.toString()},
+                        );
+                      },
+                      child: Text(
+                        companyName,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: tdBlueLight,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      ' cars only',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: tdGrey,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

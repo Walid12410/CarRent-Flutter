@@ -3,7 +3,6 @@ import 'PromoImageModel.dart';
 class Promo {
   final String id;
   final String promoCode;
-  final int discountAmount;
   final int discountPercentage;
   final DateTime startDate;
   final DateTime endDate;
@@ -20,7 +19,6 @@ class Promo {
   Promo({
     required this.id,
     required this.promoCode,
-    required this.discountAmount,
     required this.discountPercentage,
     required this.startDate,
     required this.endDate,
@@ -39,7 +37,6 @@ class Promo {
     return Promo(
       id: json['_id'] ?? '',
       promoCode: json['promoCode'] ?? '',
-      discountAmount: json['discountAmount'] ?? 0,
       discountPercentage: json['discountPercentage'] ?? 0,
       startDate: DateTime.parse(json['startDate'] ?? DateTime.now().toIso8601String()),
       endDate: DateTime.parse(json['endDate'] ?? DateTime.now().toIso8601String()),
