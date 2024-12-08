@@ -1,3 +1,4 @@
+import 'package:carrent/model/CarDetails/CarDetailsModel.dart';
 import 'package:carrent/screen/AuthenticationPages/LogIn/LogInPage.dart';
 import 'package:carrent/screen/AuthenticationPages/Register/SignUpPage.dart';
 import 'package:carrent/screen/CarCategoryListPage/CarCategoryListPage.dart';
@@ -13,6 +14,7 @@ import 'package:carrent/screen/LimitedOfferPage/LimitedOfferPage.dart';
 import 'package:carrent/screen/MapPage/MapPage.dart';
 import 'package:carrent/screen/NotificationPage/NotificationPage.dart';
 import 'package:carrent/screen/OnBoardingPage/PageView.dart';
+import 'package:carrent/screen/PaymentPage/PaymentPage.dart';
 import 'package:carrent/screen/ProfilePage/ProfilePage.dart';
 import 'package:carrent/screen/PromotionDetailsPage/PromotionDetailsPage.dart';
 import 'package:carrent/screen/PromotionPage/PromotionPage.dart';
@@ -97,20 +99,6 @@ class AppNavigation {
                           CustomTransitionPage<void>(
                         key: state.pageKey,
                         child: CompanyDetailsPage(
-                          companyId: state.pathParameters['id']!,
-                        ),
-                        transitionsBuilder: (context, animation,
-                                secondaryAnimation, child) =>
-                            FadeTransition(opacity: animation, child: child),
-                      ),
-                    ),
-                    GoRoute(
-                      path: 'CompanyCarDetails/:id',
-                      name: 'CompanyCarDetails',
-                      pageBuilder: (context, state) =>
-                          CustomTransitionPage<void>(
-                        key: state.pageKey,
-                        child: CompanyCarList(
                           companyId: state.pathParameters['id']!,
                         ),
                         transitionsBuilder: (context, animation,
@@ -275,12 +263,35 @@ class AppNavigation {
         },
       ),
       GoRoute(
+        path: '/CompanyCarDetails/:id', // Using path parameters for dynamic content
+        name: 'CompanyCarDetails',
+        builder: (context, state) {
+          final companyId = state.pathParameters['id']!;
+          return CompanyCarList(companyId: companyId);
+        },
+      ),
+      GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/signUp',
         name: "SignUp",
         builder: (context, state) => SignUpPage(
           key: state.pageKey,
         ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/payment',
+        name: "Payment",
+        builder: (context, state) {
+          // Extracting parameters from the `extra` property
+          final extra = state.extra as Map<String, dynamic>;
+          final CarDetails car = extra['car'] as CarDetails;
+
+          return PaymentPage(
+            key: state.pageKey,
+            car: car,
+          );
+        },
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,

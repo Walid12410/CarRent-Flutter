@@ -5,6 +5,7 @@ import "package:carrent/screen/CarDetailsPage/Details/ReviewCard.dart";
 import "package:flutter/material.dart";
 import "package:carrent/core/Color/color.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
 import "package:intl/intl.dart";
 import "package:provider/provider.dart";
 import "Details/CarHostView.dart";
@@ -36,7 +37,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
   Widget build(BuildContext context) {
     final car = Provider.of<CarProvider>(context, listen: true);
     var carData = car.carDetails;
-    
+
     if (carData == null || carData.id != widget.carId) {
       return const Center(
         child: CircularProgressIndicator(
@@ -69,7 +70,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                     textAlign: TextAlign.center,
                   ),
                 );
-              }else {
+              } else {
                 return SingleChildScrollView(
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -169,28 +170,50 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${carData.carMake.carMakeName} ${carData.carModel} - ${carData.year}',style: TextStyle(
-                    fontSize: 15.sp,color: tdBlueLight,fontWeight: FontWeight.bold
-                  ),overflow: TextOverflow.ellipsis,),
-                  Text('\$${carData.rentPrice} / day',style: TextStyle(
-                    fontSize: 15.sp,color: tdBlue,fontWeight: FontWeight.bold
-                  ),)
+                  Text(
+                    '${carData.carMake.carMakeName} ${carData.carModel} - ${carData.year}',
+                    style: TextStyle(
+                        fontSize: 15.sp,
+                        color: tdBlueLight,
+                        fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    '\$${carData.rentPrice} / day',
+                    style: TextStyle(
+                        fontSize: 15.sp,
+                        color: tdBlue,
+                        fontWeight: FontWeight.bold),
+                  )
                 ],
               ),
             ),
-            SizedBox(width: 30.w,),
-            Expanded(child: GestureDetector(
-              onTap: (){
-                // rent car page
+            SizedBox(
+              width: 30.w,
+            ),
+            Expanded(
+                child: GestureDetector(
+              onTap: () {
+                GoRouter.of(context).push(
+                  '/payment',
+                  extra: {
+                    'car': carData,
+                  },
+                );
               },
               child: Container(
                 height: 50.h,
-                decoration:  BoxDecoration(
-                  color: tdBlueLight,
-                  borderRadius: BorderRadius.circular(15).w
-                ),
-                child: Center(child: Text('Rent car',style:
-                 TextStyle(fontSize: 15.sp,color: tdWhite,fontWeight: FontWeight.bold),)),
+                decoration: BoxDecoration(
+                    color: tdBlueLight,
+                    borderRadius: BorderRadius.circular(15).w),
+                child: Center(
+                    child: Text(
+                  'Rent car',
+                  style: TextStyle(
+                      fontSize: 15.sp,
+                      color: tdWhite,
+                      fontWeight: FontWeight.bold),
+                )),
               ),
             ))
           ]),
@@ -199,4 +222,3 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
     );
   }
 }
-

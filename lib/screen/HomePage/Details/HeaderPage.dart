@@ -1,7 +1,10 @@
 import 'package:carrent/core/Color/color.dart';
+import 'package:carrent/core/CurrentLocation.dart';
+import 'package:carrent/provider/User_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class HeaderPage extends StatelessWidget {
   const HeaderPage({
@@ -10,6 +13,9 @@ class HeaderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context, listen: true);
+    var userDetails = user.userDetails;
+
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20).w,
       child: Row(
@@ -32,13 +38,29 @@ class HeaderPage extends StatelessWidget {
                   )
                 ],
               ),
-              Text(
-                'Lebanon, Beirut',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15.sp,
-                    color: tdBlueLight),
-              )
+              if (userDetails!.locationName == null ||
+                  userDetails.locationName == "") ...[
+                GestureDetector(
+                  onTap: () {
+                    getCurrentLocation();
+                  },
+                  child: Text(
+                    'Allow access',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
+                        color: tdBlueLight),
+                  ),
+                )
+              ] else ...[
+                Text(
+                  '${userDetails.locationName}',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.sp,
+                      color: tdBlueLight),
+                )
+              ]
             ],
           ),
           Row(

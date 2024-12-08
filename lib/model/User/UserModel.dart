@@ -12,6 +12,7 @@ class User {
   double? longitude;
   final String createdAt;
   final String updatedAt;
+  String? locationName;
 
   User({
     required this.id,
@@ -24,7 +25,8 @@ class User {
     this.latitude,
     this.longitude,
     required this.createdAt,
-    required this.updatedAt
+    required this.updatedAt,
+    this.locationName
   });
 
   factory User.fromJson(Map<String,dynamic> json){
@@ -39,7 +41,8 @@ class User {
       createdAt: json['createdAt'] ?? "", 
       updatedAt: json['updatedAt'] ?? "",
       latitude: (json['latitude'] ?? 0.0).toDouble(),
-      longitude: (json['longitude'] ?? 0.0).toDouble()
+      longitude: (json['longitude'] ?? 0.0).toDouble(),
+      locationName: json['locationName'] ?? ""
     );
   }
 }

@@ -26,7 +26,7 @@ class UserService {
   }
 
   Future<bool> updateUserProfile(
-      String firstName, String lastName, String phoneNumber) async {
+     String firstName, String lastName, String phoneNumber) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('userToken') ?? '';
     String id = prefs.getString('userId') ?? "";
@@ -99,4 +99,43 @@ class UserService {
       return false;
     }
   }
+
+  Future<bool> updateLocation(double latitude , double longitude , String locationName) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('userToken') ?? '';
+    String id = prefs.getString('userId') ?? "";
+
+    try {
+      final body = jsonEncode({
+        'latitude': latitude,
+        'longitude' : longitude,
+        'locationName' : locationName
+      });
+
+      final response = await http.put(
+          Uri.parse('${ApiEndpoints.apiUrl}/api/user/profile/$id'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+          body: body);
+
+      final responseBody = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        showSucessToast('Location save');
+        return true;
+      } else if (response.statusCode == 400) {
+        showToast(responseBody['message']);
+        return false;
+      } else {
+        showToast(responseBody['message']);
+        return false;
+      }
+    } catch (e) {
+      showToast('Something went wrong, check you connection');
+      return false;
+    }
+  }
+
 }

@@ -1,4 +1,5 @@
 import 'package:carrent/core/Color/color.dart';
+import 'package:carrent/core/CurrentLocation.dart';
 import 'package:carrent/core/Time/CurrentTime.dart';
 import 'package:carrent/model/Promo/PromoModel.dart';
 import 'package:carrent/provider/Car_Provider.dart';
@@ -6,16 +7,19 @@ import 'package:carrent/provider/Company_Provider.dart';
 import 'package:carrent/provider/Offer_Provider.dart';
 import 'package:carrent/provider/Promo_Provider.dart';
 import 'package:carrent/Widget/Car/CarDisplayCard.dart';
+import 'package:carrent/provider/User_Provider.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Details/HeaderPage.dart';
 import 'Details/LatestCompany.dart';
 import 'Details/LatestPromo.dart';
 import '../../Widget/SectionTitle.dart';
 import 'Details/TopOffer.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -32,20 +36,27 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    getCurrentLocation();
     _fetchDataFuture = _fetchData();
   }
 
   Future<void> _fetchData() async {
-    String currentTime = getCurrentTimeInISO();
     final promo = Provider.of<PromoProvider>(context, listen: false);
     final car = Provider.of<CarProvider>(context, listen: false);
     final company = Provider.of<CompanyProvider>(context, listen: false);
     final offer = Provider.of<OfferProvider>(context, listen: false);
+    final user = Provider.of<UserProvider>(context, listen: false);
+    String currentTime = getCurrentTimeInISO();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String id = prefs.getString('userId') ?? "";
     await offer.getTopOffer(currentTime);
     await car.getTopLatestCar();
     await promo.getLatestPromo(1, currentTime, 3);
     await company.getLastCompany();
     await car.getTopRatedCar(1, 4);
+    if(id != ""){
+      await user.getUserDetails(id);
+    }
   }
 
   @override
@@ -55,6 +66,7 @@ class _HomePageState extends State<HomePage> {
     var latestPromo = promo.latestPromo;
     var topRatedCar = car.topRatedCar;
     var latestCar = car.topLatestCar;
+
 
     return Scaffold(
       backgroundColor: tdWhite,
