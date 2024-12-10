@@ -22,6 +22,7 @@ import 'package:carrent/screen/RentWayPage/RentWayPage.dart';
 import 'package:carrent/core/NavigationButton/NavBar.dart';
 import 'package:carrent/screen/SearchPage/SearchPage.dart';
 import 'package:carrent/screen/UpdateProfilePage/UpdateProfilePage.dart';
+import 'package:carrent/screen/UserBookingListPage/UserBookingPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
@@ -222,6 +223,17 @@ class AppNavigation {
                     pageBuilder: (context, state) => CustomTransitionPage<void>(
                       key: state.pageKey,
                       child: const ChangePasswordPage(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) =>
+                              FadeTransition(opacity: animation, child: child),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'UserBookingList',
+                    name: 'UserBookingList',
+                    pageBuilder: (context, state) => CustomTransitionPage<void>(
+                      key: state.pageKey,
+                      child: const UserBookingListPage(),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) =>
                               FadeTransition(opacity: animation, child: child),

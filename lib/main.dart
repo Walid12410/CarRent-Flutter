@@ -1,3 +1,4 @@
+import 'package:carrent/provider/Booking_Provider.dart';
 import 'package:carrent/provider/Car_Provider.dart';
 import 'package:carrent/provider/Category_Provider.dart';
 import 'package:carrent/provider/Company_Provider.dart';
@@ -28,7 +29,8 @@ void main() async {
       ChangeNotifierProvider(create: (_) => CategoryProvider()),
       ChangeNotifierProvider(create: (_) => OfferProvider()),
       ChangeNotifierProvider(create: (_) => FeatureProvider()),
-      ChangeNotifierProvider(create: (_) => UserProvider())
+      ChangeNotifierProvider(create: (_) => UserProvider()),
+      ChangeNotifierProvider(create: (_) => BookingProvider()),
     ],
     child: const MyApp(),
   ));

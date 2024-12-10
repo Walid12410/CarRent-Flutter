@@ -100,7 +100,7 @@ class ProfilePageCard extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            //
+            GoRouter.of(context).goNamed('UserBookingList');
           },
           child: Row(
             children: [
