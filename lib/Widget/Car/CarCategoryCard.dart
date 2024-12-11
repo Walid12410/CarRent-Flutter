@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carrent/core/Color/color.dart';
 import 'package:carrent/model/Car/CarModel.dart';
+import 'package:carrent/provider/Booking_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class CarCategoryCard extends StatelessWidget {
   const CarCategoryCard({
@@ -14,6 +16,12 @@ class CarCategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bookingProvider = Provider.of<BookingProvider>(context);
+    final allUserBooking = bookingProvider.allUserBooking;
+
+    // Check if the user has booked this car
+    bool hasBooked = allUserBooking.any((booking) => booking.carId == car.id);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +97,7 @@ class CarCategoryCard extends StatelessWidget {
         SizedBox(
           height: 5.h,
         ),
-        Row(
+        hasBooked ? Row(
           children: [
             Expanded(
               child: GestureDetector(
@@ -140,7 +148,28 @@ class CarCategoryCard extends StatelessWidget {
               ),
             ),
           ],
-        ),
+        ) : GestureDetector(
+                onTap: () {
+                  // Booking car action
+                },
+                child: Container(
+                  height: 40.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: tdBlueLight,
+                    borderRadius: BorderRadius.circular(15).w,
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Booking car',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: tdWhite,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
       ],
     );
   }

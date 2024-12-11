@@ -2,6 +2,7 @@ import 'package:carrent/core/Color/color.dart';
 import 'package:carrent/core/CurrentLocation.dart';
 import 'package:carrent/core/Time/CurrentTime.dart';
 import 'package:carrent/model/Promo/PromoModel.dart';
+import 'package:carrent/provider/Booking_Provider.dart';
 import 'package:carrent/provider/Car_Provider.dart';
 import 'package:carrent/provider/Company_Provider.dart';
 import 'package:carrent/provider/Offer_Provider.dart';
@@ -46,12 +47,15 @@ class _HomePageState extends State<HomePage> {
     final company = Provider.of<CompanyProvider>(context, listen: false);
     final offer = Provider.of<OfferProvider>(context, listen: false);
     final user = Provider.of<UserProvider>(context, listen: false);
+    final booking = Provider.of<BookingProvider>(context, listen: false);
     String currentTime = getCurrentTimeInISO();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String id = prefs.getString('userId') ?? "";
     await offer.getTopOffer(currentTime);
     await car.getTopLatestCar();
     await promo.getLatestPromo(1, currentTime, 3);
+    await promo.getUserPromo();
+    await booking.getAllUserBooking();
     await company.getLastCompany();
     await car.getTopRatedCar(1, 4);
     if(id != ""){

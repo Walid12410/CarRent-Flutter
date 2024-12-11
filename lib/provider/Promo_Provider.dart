@@ -1,5 +1,6 @@
 import 'package:carrent/Api/PromoService.dart';
 import 'package:carrent/core/Time/CurrentTime.dart';
+import 'package:carrent/model/Promo/GetPromoModel.dart';
 import 'package:carrent/model/Promo/PromoDetailsModel.dart';
 import 'package:carrent/model/Promo/PromoModel.dart';
 import 'package:flutter/foundation.dart';
@@ -23,6 +24,16 @@ class PromoProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // get user promo
+  List<GetPromo> _userPromo = [];
+  List<GetPromo> get userPromo => _userPromo;
+  getUserPromo() async {
+    final res = await promo.fetchUserPromo();
+    _userPromo = res;
+    notifyListeners();  
+  }
+
+  // promo pagination
   final List<Promo> _promos = [];
   bool _isLoading = false;
   int _currentPage = 1;
