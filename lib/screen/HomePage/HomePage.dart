@@ -205,10 +205,10 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(height: 10.h),
                             const TopOfferCard(),
                             SizedBox(height: 10.h),
-                            SectionTitle(
+                            const SectionTitle(
                               title: 'Top Rated',
-                              actionText: 'See more',
-                              onActionTap: () {},
+                              actionText: ' ',
+                              onActionTap: null,
                             ),
                             SizedBox(height: 10.h),
                             CarDisplayCard(carData: topRatedCar),

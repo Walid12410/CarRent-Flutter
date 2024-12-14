@@ -10,8 +10,17 @@ class OfferProvider with ChangeNotifier {
   List<Offer> _topOffer = [];
   List<Offer> get topOffer => _topOffer;
   getTopOffer(String time) async {
-    final res = await service.fetchTopOffer(time);
+    final res = await service.fetchOffer(time,1,3);
     _topOffer = res;
+    notifyListeners();
+  }
+
+  // Iscar offer
+  List<Offer> _carOffer = [];
+  List<Offer> get carOffer => _carOffer;
+  getCarOffer(String time,String carId) async {
+    final res = await service.fetchCarOffer(carId, time);
+    _carOffer = res;
     notifyListeners();
   }
 

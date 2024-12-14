@@ -1,4 +1,6 @@
+import "package:carrent/core/Time/CurrentTime.dart";
 import "package:carrent/provider/Car_Provider.dart";
+import "package:carrent/provider/Offer_Provider.dart";
 import "package:carrent/screen/CarDetailsPage/Details/CarDetailsImage.dart";
 import "package:carrent/screen/CarDetailsPage/Details/CarDetailsView.dart";
 import "package:carrent/screen/CarDetailsPage/Details/ReviewCard.dart";
@@ -30,13 +32,18 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
 
   Future<void> _fetchData() async {
     final car = Provider.of<CarProvider>(context, listen: false);
+    final offer = Provider.of<OfferProvider>(context, listen: false);
+    String currentTime = getCurrentTimeInISO();
     car.getCarDetails(widget.carId);
+    offer.getCarOffer(currentTime, widget.carId);
   }
 
   @override
   Widget build(BuildContext context) {
     final car = Provider.of<CarProvider>(context, listen: true);
+    final offer = Provider.of<OfferProvider>(context, listen: true);
     var carData = car.carDetails;
+    var isOffer = offer.carOffer;
 
     if (carData == null || carData.id != widget.carId) {
       return const Center(
@@ -139,15 +146,18 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                                             );
                                           },
                                         ),
-                                        TextButton(
-                                            onPressed: () {},
-                                            child: Text(
-                                              'See more review',
-                                              style: TextStyle(
-                                                  fontSize: 12.sp,
-                                                  color: tdBlue,
-                                                  fontWeight: FontWeight.bold),
-                                            ))
+                                        carData.reviewCount > 2
+                                            ? TextButton(
+                                                onPressed: () {},
+                                                child: Text(
+                                                  'See more review',
+                                                  style: TextStyle(
+                                                      fontSize: 12.sp,
+                                                      color: tdBlue,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ))
+                                            : Container()
                                       ],
                                     ),
                             ],
@@ -178,13 +188,38 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                         fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Text(
-                    '\$${carData.rentPrice} / day',
-                    style: TextStyle(
-                        fontSize: 15.sp,
-                        color: tdBlue,
-                        fontWeight: FontWeight.bold),
-                  )
+                  if (isOffer.isEmpty) ...[
+                    Text(
+                      '\$${carData.rentPrice} / day',
+                      style: TextStyle(
+                          fontSize: 15.sp,
+                          color: tdBlue,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ] else ...[
+                    Row(
+                      children: [
+                        Text(
+                          '\$${carData.rentPrice} / day',
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: tdBlue,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.lineThrough,
+                            decorationThickness: 3,
+                            decorationColor: tdGrey,
+                            ),   
+                        ),
+                        Text(
+                          '   \$${isOffer.first.discountPrice}/ day',
+                          style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    )
+                  ]
                 ],
               ),
             ),

@@ -82,19 +82,6 @@ class _CarCategoryListPageState extends State<CarCategoryListPage> {
             ),
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20).w,
-            child: IconButton(
-              icon: Icon(
-                Icons.search,
-                size: 20.w,
-                color: tdGrey,
-              ),
-              onPressed: () {},
-            ),
-          ),
-        ],
       ),
       body: Consumer<CarProvider>(builder: (context, carProvider, child) {
         if (carProvider.isLoadingCatCar && carProvider.categoryCars.isEmpty) {

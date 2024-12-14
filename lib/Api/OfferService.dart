@@ -5,18 +5,18 @@ import 'package:http/http.dart' as http;
 import '../core/ApiEndPoint.dart';
 
 class OfferService {
-  Future<List<Offer>> fetchTopOffer(String time) async {
+  Future<List<Offer>> fetchOffer(String time, int page, int limit) async {
     try {
       final response = await http.get(Uri.parse(
-          '${ApiEndpoints.apiUrl}/api/offer?currentTime=$time&page=1&limit=3'));
+          '${ApiEndpoints.apiUrl}/api/offer?currentTime=$time&page=$page&limit=$limit'));
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);
-        List<Offer> topOffer =
+        List<Offer> offer =
             jsonData.map((json) => Offer.fromJson(json)).toList();
-        return topOffer;
+        return offer;
       } else {
-        showToast('Falid to load top offer');
-        throw Exception('Failed to load top Offer');
+        showToast('Falid to load offer');
+        throw Exception('Failed to load Offer');
       }
     } catch (e) {
       showToast('Server Error');
@@ -24,10 +24,10 @@ class OfferService {
     }
   }
 
-  Future<List<Offer>> fetchOffer(String time, int page, int limit) async {
+  Future<List<Offer>> fetchCarOffer(String carId, String time) async {
     try {
       final response = await http.get(Uri.parse(
-          '${ApiEndpoints.apiUrl}/api/offer?currentTime=$time&page=$page&limit=$limit'));
+          '${ApiEndpoints.apiUrl}/api/offer/check-car/$carId?currentTime=$time'));
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);
         List<Offer> offer =

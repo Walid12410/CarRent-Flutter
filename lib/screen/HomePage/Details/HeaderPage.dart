@@ -21,47 +21,50 @@ class HeaderPage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'Your location',
-                    style: TextStyle(fontSize: 13.sp, color: tdGrey),
-                  ),
-                  Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 25.w,
-                    color: tdGrey,
+          SizedBox(
+            width: 170.w,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Your location',
+                      style: TextStyle(fontSize: 13.sp, color: tdGrey),
+                    ),
+                    Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 25.w,
+                      color: tdGrey,
+                    )
+                  ],
+                ),
+                if (userDetails!.locationName == null ||
+                    userDetails.locationName == "") ...[
+                  GestureDetector(
+                    onTap: () {
+                      getCurrentLocation();
+                    },
+                    child: Text(
+                      'Allow access',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15.sp,
+                          color: tdBlueLight),
+                    ),
                   )
-                ],
-              ),
-              if (userDetails!.locationName == null ||
-                  userDetails.locationName == "") ...[
-                GestureDetector(
-                  onTap: () {
-                    getCurrentLocation();
-                  },
-                  child: Text(
-                    'Allow access',
+                ] else ...[
+                  Text(
+                    '${userDetails.locationName}',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15.sp,
-                        color: tdBlueLight),
-                  ),
-                )
-              ] else ...[
-                Text(
-                  '${userDetails.locationName}',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.sp,
-                      color: tdBlueLight),
-                )
-              ]
-            ],
+                        color: tdBlueLight),overflow: TextOverflow.ellipsis,
+                  )
+                ]
+              ],
+            ),
           ),
           Row(
             children: [

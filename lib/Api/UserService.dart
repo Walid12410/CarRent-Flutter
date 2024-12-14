@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:carrent/Widget/Toast/ToastError.dart';
 import 'package:carrent/Widget/Toast/ToastSuccess.dart';
 import 'package:carrent/core/ApiEndPoint.dart';
+import 'package:flutter_cache_manager/file.dart';
 import 'package:http/http.dart' as http;
 import 'package:carrent/model/User/UserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +27,7 @@ class UserService {
   }
 
   Future<bool> updateUserProfile(
-     String firstName, String lastName, String phoneNumber) async {
+      String firstName, String lastName, String phoneNumber) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('userToken') ?? '';
     String id = prefs.getString('userId') ?? "";
@@ -100,7 +101,8 @@ class UserService {
     }
   }
 
-  Future<bool> updateLocation(double latitude , double longitude , String locationName) async {
+  Future<bool> updateLocation(
+      double latitude, double longitude, String locationName) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('userToken') ?? '';
     String id = prefs.getString('userId') ?? "";
@@ -108,8 +110,8 @@ class UserService {
     try {
       final body = jsonEncode({
         'latitude': latitude,
-        'longitude' : longitude,
-        'locationName' : locationName
+        'longitude': longitude,
+        'locationName': locationName
       });
 
       final response = await http.put(
@@ -138,4 +140,34 @@ class UserService {
     }
   }
 
+  Future<void> uploadProfileImage(File image) async {
+    final url = Uri.parse(
+        "${ApiEndpoints.apiUrl}/api/user/profile/upload-image"); // Replace with your API URL
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('userToken') ?? '';
+
+    try {
+      var request = http.MultipartRequest("POST", url)
+        ..headers['Authorization'] = 'Bearer $token'
+        ..files.add(await http.MultipartFile.fromPath('image', image.path));
+
+      var response = await request.send();
+
+      // Check if the response was successful
+      if (response.statusCode == 200) {
+        // Decode the response body to get the result (if needed)
+        final responseData = json.decode(await response.stream.bytesToString());
+        print("Success: ${responseData['message']}");
+
+        // Optionally, update user profile with the new photo URL from response
+      } else {
+        // Handle failure response
+        final responseData = json.decode(await response.stream.bytesToString());
+        throw Exception("Failed to upload image: ${responseData['message']}");
+      }
+    } catch (error) {
+      print("Error uploading image: $error");
+      rethrow; // Optionally handle rethrow or show an error to the user
+    }
+  }
 }

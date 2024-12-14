@@ -1,6 +1,5 @@
 import 'package:carrent/core/Color/color.dart';
 import 'package:carrent/model/Car/CarModel.dart';
-import 'package:carrent/provider/Booking_Provider.dart';
 import 'package:carrent/provider/Car_Provider.dart';
 import 'package:carrent/Widget/Car/CarCategoryCard.dart';
 import 'package:flutter/material.dart';

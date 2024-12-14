@@ -353,7 +353,7 @@ class _PaymentPageState extends State<PaymentPage> {
           ],
         ),
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               '${userDetails.firstName} ${userDetails.lastName}',
@@ -363,7 +363,7 @@ class _PaymentPageState extends State<PaymentPage> {
               height: 5.h,
             ),
             Text(
-              'Lebanon Beirut',
+              userDetails.locationName,
               style: _renterInfoStyle(),
             ),
             SizedBox(

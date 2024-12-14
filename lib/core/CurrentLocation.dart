@@ -45,7 +45,7 @@ Future<void> getCurrentLocation() async {
     if (placemarks.isNotEmpty) {
       Placemark place = placemarks[0];
       String locationName =
-          '${place.administrativeArea}, ${place.country}';
+          '${place.administrativeArea}, ${place.street}';
 
       print('Location name: $locationName');
 
