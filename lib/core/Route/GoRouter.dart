@@ -1,3 +1,4 @@
+import 'package:carrent/model/Car/CarModel.dart';
 import 'package:carrent/model/CarDetails/CarDetailsModel.dart';
 import 'package:carrent/screen/AuthenticationPages/LogIn/LogInPage.dart';
 import 'package:carrent/screen/AuthenticationPages/Register/SignUpPage.dart';
@@ -20,6 +21,7 @@ import 'package:carrent/screen/PromotionDetailsPage/PromotionDetailsPage.dart';
 import 'package:carrent/screen/PromotionPage/PromotionPage.dart';
 import 'package:carrent/screen/RentWayPage/RentWayPage.dart';
 import 'package:carrent/core/NavigationButton/NavBar.dart';
+import 'package:carrent/screen/ReviewMakePage/AddReview.dart';
 import 'package:carrent/screen/SearchPage/SearchPage.dart';
 import 'package:carrent/screen/UpdateProfilePage/UpdateProfilePage.dart';
 import 'package:carrent/screen/UserBookingListPage/UserBookingPage.dart';
@@ -275,7 +277,8 @@ class AppNavigation {
         },
       ),
       GoRoute(
-        path: '/CompanyCarDetails/:id', // Using path parameters for dynamic content
+        path:
+            '/CompanyCarDetails/:id', // Using path parameters for dynamic content
         name: 'CompanyCarDetails',
         builder: (context, state) {
           final companyId = state.pathParameters['id']!;
@@ -330,6 +333,20 @@ class AppNavigation {
           key: state.pageKey,
           carId: state.pathParameters['id']!,
         ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/addReview',
+        name: "AddReview",
+        builder: (context, state) {
+          // Safely cast state.extra to Car
+          final car = state.extra as Car?;
+          // Check if car is null and handle appropriately
+          if (car == null) {
+            throw Exception("Car object is required for AddReviewPage");
+          }
+          return AddReviewPage(car: car);
+        },
       ),
     ],
   );
