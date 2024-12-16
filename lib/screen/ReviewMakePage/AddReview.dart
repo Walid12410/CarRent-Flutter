@@ -1,4 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carrent/Api/ReviewService.dart';
+import 'package:carrent/Widget/Toast/ToastError.dart';
+import 'package:carrent/Widget/Toast/ToastValidation.dart';
 import 'package:carrent/core/Color/color.dart';
 import 'package:carrent/model/Car/CarModel.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +18,42 @@ class AddReviewPage extends StatefulWidget {
 
 class _AddReviewPageState extends State<AddReviewPage> {
   int _selectedStars = 0;
-  TextEditingController _textReview = TextEditingController();
+  final TextEditingController _textReview = TextEditingController();
+  bool isLoading = false;
+
+  void createReview(int star, String text, String carId) async {
+    ReviewService service = ReviewService();
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      if (star == 0) {
+        showValidationToast('rating star is required');
+        return;
+      }
+      if (text == "" || text.isEmpty) {
+        showValidationToast('review Text is required');
+        return;
+      }
+      bool isCreated = await service.createReview(star, text, carId);
+      if (isCreated) {
+        setState(() {
+          GoRouter.of(context).goNamed('Category');
+        });
+      }
+    } catch (e) {
+      showToast('Something went wrong, check your connection');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: tdWhite,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -32,7 +65,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
                 SizedBox(height: 10.h),
                 IconButton(
                     onPressed: () {
-                      context.pop();
+                      GoRouter.of(context).goNamed('Category');
                     },
                     icon:
                         Icon(Icons.arrow_back_ios, size: 20.w, color: tdGrey)),
@@ -97,9 +130,11 @@ class _AddReviewPageState extends State<AddReviewPage> {
                         });
                       },
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 10,right: 10).w,
+                        padding: const EdgeInsets.only(left: 10, right: 10).w,
                         child: Icon(
-                          index < _selectedStars ? Icons.star : Icons.star_border,
+                          index < _selectedStars
+                              ? Icons.star
+                              : Icons.star_border,
                           color: Colors.amber,
                           size: 35,
                         ),
@@ -125,13 +160,12 @@ class _AddReviewPageState extends State<AddReviewPage> {
                   cursorColor: tdBlueLight,
                   decoration: InputDecoration(
                     hintText: "Tell us about this car and company service",
-                    hintStyle:  TextStyle(color: tdGrey,fontSize: 12.sp),
+                    hintStyle: TextStyle(color: tdGrey, fontSize: 12.sp),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: tdBlue, width: 1.5),
+                      borderSide: const BorderSide(color: tdBlue, width: 1.5),
                       borderRadius: BorderRadius.circular(12).w,
                     ),
                   ),
@@ -147,18 +181,28 @@ class _AddReviewPageState extends State<AddReviewPage> {
         surfaceTintColor: tdWhite,
         height: 70.h,
         child: Padding(
-          padding: const EdgeInsets.only(left: 10,right: 10,bottom: 15).w,
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 15).w,
           child: GestureDetector(
+            onTap: isLoading
+                ? null
+                : () {
+                    createReview(
+                        _selectedStars, _textReview.text, widget.car.id);
+                  },
             child: Container(
               width: double.infinity,
               height: 40.h,
               decoration: BoxDecoration(
-                color: tdBlueLight,
-                borderRadius: BorderRadius.circular(12).w
-              ),
+                  color: tdBlueLight,
+                  borderRadius: BorderRadius.circular(12).w),
               child: Center(
-                child: Text('Send',style: TextStyle(fontSize: 15.sp,color: tdWhite,
-                fontWeight: FontWeight.bold),),
+                child: Text(
+                  isLoading ? "Sending..." : "Send",
+                  style: TextStyle(
+                      fontSize: 15.sp,
+                      color: tdWhite,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
