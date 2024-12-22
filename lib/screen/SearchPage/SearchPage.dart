@@ -396,61 +396,59 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                       ),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                                              GestureDetector(
-                      onTap: () {
-                        // Apply all filter
-                        filterProvider.applyFilter();
-                        // pop dialog
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        width: 120.w,
-                        height: 40.h,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12).w,
-                            color: tdBlueLight),
-                        child: Center(
-                          child: Text(
-                            'Apply filter',
-                            style: TextStyle(
-                                fontSize: 15.sp,
-                                color: tdWhite,
-                                fontWeight: FontWeight.w500),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            // Apply all filter
+                            filterProvider.applyFilter();
+                            // pop dialog
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            width: 120.w,
+                            height: 40.h,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12).w,
+                                color: tdBlueLight),
+                            child: Center(
+                              child: Text(
+                                'Apply filter',
+                                style: TextStyle(
+                                    fontSize: 15.sp,
+                                    color: tdWhite,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-
-                      GestureDetector(
-                      onTap: () {
-                        // Clear filter
-                        filterProvider.clearFilter();
-                        // pop dialog
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        width: 120.w,
-                        height: 40.h,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12).w,
-                            color: tdBlueLight),
-                        child: Center(
-                          child: Text(
-                            'Clear filter',
-                            style: TextStyle(
-                                fontSize: 15.sp,
-                                color: tdWhite,
-                                fontWeight: FontWeight.w500),
+                        GestureDetector(
+                          onTap: () {
+                            // Clear filter
+                            filterProvider.clearFilter();
+                            // pop dialog
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            width: 120.w,
+                            height: 40.h,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12).w,
+                                color: tdBlueLight),
+                            child: Center(
+                              child: Text(
+                                'Clear filter',
+                                style: TextStyle(
+                                    fontSize: 15.sp,
+                                    color: tdWhite,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-
-                        ],
-                      )
+                      ],
+                    )
                   ],
                 ),
               );
@@ -553,7 +551,7 @@ class _SearchPageState extends State<SearchPage> {
                                       color: tdBlueLight,
                                     ))
                                   : SizedBox(
-                                    height: 700.h,
+                                      height: 700.h,
                                       child: ListView.builder(
                                         itemCount: carProvider.cars.length +
                                             (carProvider.isLoading ? 1 : 0),
