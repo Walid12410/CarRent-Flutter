@@ -27,8 +27,8 @@ class BookingCarCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 80.h,
-            width: 100.w,
+            height: 90.h,
+            width: 110.w,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12).w,
               child: CachedNetworkImage(
@@ -46,42 +46,70 @@ class BookingCarCard extends StatelessWidget {
           SizedBox(
             width: 10.w,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 5.h,
-              ),
-              Text(
-                '${book.car!.carMake.carMakeName} ${book.car!.carModel} - ${book.car!.year}',
-                style: TextStyle(
-                    fontSize: 15.sp,
-                    color: tdBlueLight,
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                'Total price rented: \$${book.totalRentPrice.toStringAsFixed(0)} / day',
-                style: TextStyle(
-                    fontSize: 12.sp,
-                    color: tdBlueLight,
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                'From $startDate to $endDate',
-                style: TextStyle(
-                    fontSize: 10.sp,
-                    color: tdBlueLight,
-                    fontWeight: FontWeight.w700),
-              ),
-              Text(
-                'Days rented : ${book.daysRent}',
-                style: TextStyle(
-                    fontSize: 10.sp,
-                    color: tdBlueLight,
-                    fontWeight: FontWeight.w500),
-              ),
-            ],
+          SizedBox(
+            width: 175.w,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${book.car!.carMake.carMakeName} ${book.car!.carModel} - ${book.car!.year}',
+                  style: TextStyle(
+                      fontSize: 15.sp,
+                      color: tdBlueLight,
+                      fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  'Total price rented: \$${book.totalRentPrice.toStringAsFixed(0)} / day',
+                  style: TextStyle(
+                      fontSize: 12.sp,
+                      color: tdBlueLight,
+                      fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  'From $startDate to $endDate',
+                  style: TextStyle(
+                      fontSize: 10.sp,
+                      color: tdBlueLight,
+                      fontWeight: FontWeight.w700),overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  'Days rented : ${book.daysRent}',
+                  style: TextStyle(
+                      fontSize: 10.sp,
+                      color: tdBlueLight,
+                      fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 5.h,),
+                GestureDetector(
+                  onTap: (){
+            
+                  },
+                  child: Container(
+                    width: 100.w,
+                    height: 20.h,
+                    decoration: BoxDecoration(
+                      color: tdBlueLight,
+                      borderRadius: BorderRadius.circular(12).w,
+                    ),
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.star,color: tdWhite,size: 15.w,),
+                        SizedBox(width: 2.w,),
+                        Text(
+                            'Rate car',
+                            style: TextStyle(
+                                fontSize: 8.sp,
+                                color: tdWhite,
+                                fontWeight: FontWeight.w500),
+                          ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           )
         ],
       ),
