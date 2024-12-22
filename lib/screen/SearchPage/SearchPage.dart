@@ -2,12 +2,18 @@ import "dart:async";
 
 import "package:cached_network_image/cached_network_image.dart";
 import "package:carrent/Widget/Car/SearchCarCard.dart";
+import "dart:async";
+
+import "package:cached_network_image/cached_network_image.dart";
+import "package:carrent/Widget/Car/SearchCarCard.dart";
 import "package:carrent/core/Color/color.dart";
 import "package:carrent/model/Car/CarMakeModel.dart";
+import "package:carrent/model/Car/CarModel.dart";
 import "package:carrent/model/Car/CarModel.dart";
 import "package:carrent/model/Category/CategoryModel.dart";
 import "package:carrent/provider/Car_Provider.dart";
 import "package:carrent/provider/Category_Provider.dart";
+import "package:carrent/provider/Search_Provider.dart";
 import "package:carrent/provider/Search_Provider.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
@@ -28,8 +34,16 @@ class _SearchPageState extends State<SearchPage> {
   double maxValue = 250.0;
   String? carMakeSelected; // Add this variable at the top
   List<String> categorySelected = [];
+  final TextEditingController _searchController = TextEditingController();
+  double minValue = 15.0;
+  double maxValue = 250.0;
+  String? carMakeSelected; // Add this variable at the top
+  List<String> categorySelected = [];
   bool showAllCategories = false;
   bool showAllCarModels = false;
+  String _searchQuery = '';
+  int _currentPage = 1;
+  Timer? _debounce;
   String _searchQuery = '';
   int _currentPage = 1;
   Timer? _debounce;
@@ -84,9 +98,55 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    if (_debounce != null) {
+      _debounce?.cancel();
+    }
+    super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    final filterSearch = Provider.of<SerachProvider>(context, listen: false);
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        _searchQuery = query;
+        _currentPage = 1;
+      });
+      // Trigger the search when the user stops typing
+      Provider.of<SerachProvider>(context, listen: false).fetchSearch(
+          _currentPage,
+          _searchQuery,
+          filterSearch.selectedCategories,
+          filterSearch.currentMinValue,
+          filterSearch.currentMaxValue,
+          filterSearch.selectedCarMake);
+    });
+  }
+
+  void _loadMore() {
+    final filterSearch = Provider.of<SerachProvider>(context, listen: false);
+    if (_currentPage * 10 < filterSearch.totalResults) {
+      setState(() {
+        _currentPage++;
+      });
+      Provider.of<SerachProvider>(context, listen: false).fetchSearch(
+          _currentPage,
+          _searchQuery,
+          filterSearch.selectedCategories,
+          filterSearch.currentMinValue,
+          filterSearch.currentMaxValue,
+          filterSearch.selectedCarMake);
+    }
+  }
+
   Future<void> _fetchData() async {
     final car = Provider.of<CarProvider>(context, listen: false);
     final category = Provider.of<CategoryProvider>(context, listen: false);
+    final filterProvider = Provider.of<SerachProvider>(context, listen: false);
+    await filterProvider.init();
     final filterProvider = Provider.of<SerachProvider>(context, listen: false);
     await filterProvider.init();
     await car.getAllCarMake();
@@ -120,6 +180,17 @@ class _SearchPageState extends State<SearchPage> {
               minValue = currentMinValue;
               carMakeSelected = currentSelectedCarMake;
 
+              final filterProvider =
+                  Provider.of<SerachProvider>(context, listen: false);
+              double currentMinValue = filterProvider.currentMinValue;
+              double currentMaxValue = filterProvider.currentMaxValue;
+              String? currentSelectedCarMake = filterProvider.selectedCarMake;
+              List<String> selectedCategories =
+                  filterProvider.selectedCategories;
+              maxValue = currentMaxValue;
+              minValue = currentMinValue;
+              carMakeSelected = currentSelectedCarMake;
+
               return SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -137,6 +208,7 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                         IconButton(
                           onPressed: () {
+                            filterProvider.init();
                             filterProvider.init();
                             Navigator.of(context).pop();
                           },
@@ -158,6 +230,7 @@ class _SearchPageState extends State<SearchPage> {
                       width: 500.w,
                       child: RangeSlider(
                         values: RangeValues(minValue, maxValue),
+                        values: RangeValues(minValue, maxValue),
                         min: 0,
                         max: 500,
                         divisions: 50,
@@ -167,6 +240,9 @@ class _SearchPageState extends State<SearchPage> {
                             tdGrey, // Set the inactive track color to a lighter blue
                         onChanged: (RangeValues values) {
                           setDialogState(() {
+                            minValue = values.start;
+                            maxValue = values.end;
+                            filterProvider.setPriceRange(minValue, maxValue);
                             minValue = values.start;
                             maxValue = values.end;
                             filterProvider.setPriceRange(minValue, maxValue);
@@ -200,6 +276,7 @@ class _SearchPageState extends State<SearchPage> {
                                 SizedBox(height: 5.h),
                                 Text(
                                   '\$$minValue / day',
+                                  '\$$minValue / day',
                                   style: TextStyle(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.bold,
@@ -232,6 +309,7 @@ class _SearchPageState extends State<SearchPage> {
                                 ),
                                 SizedBox(height: 5.h),
                                 Text(
+                                  '\$$maxValue / day',
                                   '\$$maxValue / day',
                                   style: TextStyle(
                                       fontSize: 12.sp,
@@ -276,7 +354,13 @@ class _SearchPageState extends State<SearchPage> {
                                     // Only add the selected category
                                     selectedCategories
                                         .add(categoryList[index].id);
+                                    // Only add the selected category
+                                    selectedCategories
+                                        .add(categoryList[index].id);
                                   } else {
+                                    // Only remove the deselected category
+                                    selectedCategories
+                                        .remove(categoryList[index].id);
                                     // Only remove the deselected category
                                     selectedCategories
                                         .remove(categoryList[index].id);
@@ -341,10 +425,13 @@ class _SearchPageState extends State<SearchPage> {
                             value: carModel[index].id.toString(),
                             groupValue:
                                 carMakeSelected, // Holds the selected car model
+                                carMakeSelected, // Holds the selected car model
                             onChanged: (String? value) {
                               setDialogState(() {
                                 carMakeSelected =
+                                carMakeSelected =
                                     value; // Set the selected car model
+                                filterProvider.setCarMake(carMakeSelected);
                                 filterProvider.setCarMake(carMakeSelected);
                               });
                             },
@@ -407,8 +494,18 @@ class _SearchPageState extends State<SearchPage> {
                         filterProvider.applyFilter();
                         // pop dialog
                         Navigator.of(context).pop();
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                                              GestureDetector(
+                      onTap: () {
+                        // Apply all filter
+                        filterProvider.applyFilter();
+                        // pop dialog
+                        Navigator.of(context).pop();
                       },
                       child: Container(
+                        width: 120.w,
                         width: 120.w,
                         height: 40.h,
                         decoration: BoxDecoration(
@@ -424,6 +521,35 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                         ),
                       ),
+                    ),
+
+                      GestureDetector(
+                      onTap: () {
+                        // Clear filter
+                        filterProvider.clearFilter();
+                        // pop dialog
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        width: 120.w,
+                        height: 40.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12).w,
+                            color: tdBlueLight),
+                        child: Center(
+                          child: Text(
+                            'Clear filter',
+                            style: TextStyle(
+                                fontSize: 15.sp,
+                                color: tdWhite,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                        ],
+                      )
                     ),
 
                       GestureDetector(
@@ -533,6 +659,12 @@ class _SearchPageState extends State<SearchPage> {
                                 },
                                 style: TextStyle(
                                     fontSize: 12.sp, color: tdBlueLight),
+                                controller: _searchController,
+                                onChanged: (value) {
+                                  _onSearchChanged(_searchController.text);
+                                },
+                                style: TextStyle(
+                                    fontSize: 12.sp, color: tdBlueLight),
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Search for special car",
@@ -613,6 +745,7 @@ class _SearchPageState extends State<SearchPage> {
         shadowColor: tdWhite,
         child: Padding(
           padding: const EdgeInsets.only(left: 110, right: 110, top: 12).w,
+          padding: const EdgeInsets.only(left: 110, right: 110, top: 12).w,
           child: Container(
             decoration: BoxDecoration(
                 color: tdBlueLight, borderRadius: BorderRadius.circular(15).w),
@@ -635,6 +768,10 @@ class _SearchPageState extends State<SearchPage> {
                           fontSize: 12.sp,
                           color: tdWhite,
                           fontWeight: FontWeight.w400),
+                      style: TextStyle(
+                          fontSize: 12.sp,
+                          color: tdWhite,
+                          fontWeight: FontWeight.w400),
                     )
                   ]),
                 ),
@@ -653,6 +790,10 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     Text(
                       'Filter ',
+                      style: TextStyle(
+                          fontSize: 12.sp,
+                          color: tdWhite,
+                          fontWeight: FontWeight.w400),
                       style: TextStyle(
                           fontSize: 12.sp,
                           color: tdWhite,
