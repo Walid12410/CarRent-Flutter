@@ -24,6 +24,7 @@ import 'package:carrent/core/NavigationButton/NavBar.dart';
 import 'package:carrent/screen/ReviewMakePage/AddReview.dart';
 import 'package:carrent/screen/SearchPage/SearchPage.dart';
 import 'package:carrent/screen/UpdateProfilePage/UpdateProfilePage.dart';
+import 'package:carrent/screen/UpdateReviewPage/UpdateReviewPage.dart';
 import 'package:carrent/screen/UserBookingListPage/UserBookingPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
@@ -348,6 +349,21 @@ class AppNavigation {
           return AddReviewPage(car: car);
         },
       ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/updateReview',
+        name: "updateReview",
+        builder: (context, state) {
+          // Safely cast state.extra to Car
+          final car = state.extra as Car?;
+          // Check if car is null and handle appropriately
+          if (car == null) {
+            throw Exception("Car object is required for AddReviewPage");
+          }
+          return UpdateReviewPage(car: car);
+        },
+      ),
+
     ],
   );
 }

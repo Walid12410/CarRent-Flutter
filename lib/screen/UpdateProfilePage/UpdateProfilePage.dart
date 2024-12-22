@@ -20,7 +20,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late TextEditingController _firstName;
   late TextEditingController _lastName;
   late TextEditingController _phoneNumber;
-  late String _id;
   bool isLoading = false;
 
 
@@ -32,7 +31,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     _firstName = TextEditingController(text: user.userDetails?.firstName);
     _lastName = TextEditingController(text: user.userDetails?.lastName);
     _phoneNumber = TextEditingController(text: user.userDetails?.phoneNumber);
-    _id = user.userDetails!.id;
   }
 
   @override
@@ -59,7 +57,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
      bool isUpdated = await service.updateUserProfile(fName, lName, number);
      if(isUpdated) {
       setState(() {
-        Provider.of<UserProvider>(context, listen: false).getUserDetails(_id);
+        Provider.of<UserProvider>(context, listen: false).getUserDetails();
         context.pop();
       });
      } 

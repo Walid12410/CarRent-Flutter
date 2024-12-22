@@ -35,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
     // ignore: use_build_context_synchronously
     final user = Provider.of<UserProvider>(context, listen: false);
-    await user.getUserDetails(userId); // Fetch user details asynchronously
+    await user.getUserDetails(); // Fetch user details asynchronously
   }
 
   @override

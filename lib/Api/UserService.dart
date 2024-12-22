@@ -8,7 +8,9 @@ import 'package:carrent/model/User/UserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
-  Future<User> fetchUserProfile(String id) async {
+  Future<User> fetchUserProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String id = prefs.getString('userId') ?? "";
     try {
       final response = await http
           .get(Uri.parse('${ApiEndpoints.apiUrl}/api/user/profile/$id'));

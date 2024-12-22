@@ -8,8 +8,8 @@ class UserProvider with ChangeNotifier {
   // user details
   User? _userDetails;
   User? get userDetails => _userDetails;
-  getUserDetails(String id) async {
-    final res = await service.fetchUserProfile(id);
+  getUserDetails() async {
+    final res = await service.fetchUserProfile();
     _userDetails = res;
     notifyListeners();
   }

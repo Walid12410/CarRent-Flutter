@@ -1,6 +1,7 @@
 import "package:carrent/Widget/Car/BookingCarCard.dart";
 import "package:carrent/core/Color/color.dart";
 import "package:carrent/provider/Booking_Provider.dart";
+import "package:carrent/provider/Review_Provider.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:go_router/go_router.dart";
@@ -24,6 +25,8 @@ class _UserBookingListPageState extends State<UserBookingListPage> {
 
   Future<void> _fetchData() async {
     final booking = Provider.of<BookingProvider>(context, listen: false);
+    final review = Provider.of<ReviewProvider>(context, listen: false);
+    await review.getAllUserReview();
     await booking.getAllUserBooking();
   }
 

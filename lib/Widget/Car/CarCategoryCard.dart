@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carrent/core/Color/color.dart';
 import 'package:carrent/model/Car/CarModel.dart';
 import 'package:carrent/provider/Booking_Provider.dart';
+import 'package:carrent/provider/Review_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +20,11 @@ class CarCategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final bookingProvider = Provider.of<BookingProvider>(context);
     final allUserBooking = bookingProvider.allUserBooking;
+    final review = Provider.of<ReviewProvider>(context, listen: false);
+    var userReview = review.userReview;
+
+    // check if user already review this car
+    bool hasReview = userReview.any((review) => review.carId == car.id);
 
     // Check if the user has booked this car
     bool hasBooked = allUserBooking.any((booking) => booking.carId == car.id);
@@ -105,7 +111,8 @@ class CarCategoryCard extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        GoRouter.of(context).go('/addReview', extra: car);
+                        hasReview ? context.push('/updateReview', extra: car) :
+                        context.push('/addReview', extra: car);
                       },
                       child: Container(
                         height: 40.h,

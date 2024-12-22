@@ -1,9 +1,12 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:carrent/core/Color/color.dart";
 import "package:carrent/model/Booking/BookingModel.dart";
+import "package:carrent/provider/Review_Provider.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
 import "package:intl/intl.dart";
+import "package:provider/provider.dart";
 
 class BookingCarCard extends StatelessWidget {
   const BookingCarCard({
@@ -15,6 +18,11 @@ class BookingCarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final review = Provider.of<ReviewProvider>(context, listen: true);
+    var userReview = review.userReview;
+
+    bool hasReview = userReview.any((review) => review.carId == book.car!.id);
+
     String startDate =
         DateFormat('yyyy-MM-dd').format(DateTime.parse(book.startDate));
     String endDate =
@@ -26,20 +34,26 @@ class BookingCarCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 90.h,
-            width: 110.w,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12).w,
-              child: CachedNetworkImage(
-                imageUrl: book.car!.carImage[0].carImage.url,
-                fit: BoxFit.fill,
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    CircularProgressIndicator(
-                  value: downloadProgress.progress,
-                  color: tdBlueLight,
+          GestureDetector(
+            onTap: (){
+              GoRouter.of(context).pushNamed('CarDetails',
+                pathParameters: {'id': book.car!.id.toString()});
+            },
+            child: SizedBox(
+              height: 90.h,
+              width: 110.w,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12).w,
+                child: CachedNetworkImage(
+                  imageUrl: book.car!.carImage[0].carImage.url,
+                  fit: BoxFit.fill,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                    value: downloadProgress.progress,
+                    color: tdBlueLight,
+                  ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
           ),
@@ -83,7 +97,8 @@ class BookingCarCard extends StatelessWidget {
                 SizedBox(height: 5.h,),
                 GestureDetector(
                   onTap: (){
-            
+                    hasReview ? context.push('/updateReview', extra: book.car) :
+                    context.push('/addReview', extra: book.car);
                   },
                   child: Container(
                     width: 100.w,

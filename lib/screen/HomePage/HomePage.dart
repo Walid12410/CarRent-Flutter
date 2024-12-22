@@ -8,6 +8,7 @@ import 'package:carrent/provider/Company_Provider.dart';
 import 'package:carrent/provider/Offer_Provider.dart';
 import 'package:carrent/provider/Promo_Provider.dart';
 import 'package:carrent/Widget/Car/CarDisplayCard.dart';
+import 'package:carrent/provider/Review_Provider.dart';
 import 'package:carrent/provider/User_Provider.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,6 @@ import 'Details/LatestCompany.dart';
 import 'Details/LatestPromo.dart';
 import '../../Widget/SectionTitle.dart';
 import 'Details/TopOffer.dart';
-
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -47,19 +47,24 @@ class _HomePageState extends State<HomePage> {
     final company = Provider.of<CompanyProvider>(context, listen: false);
     final offer = Provider.of<OfferProvider>(context, listen: false);
     final user = Provider.of<UserProvider>(context, listen: false);
+    final review = Provider.of<ReviewProvider>(context, listen: false);
     final booking = Provider.of<BookingProvider>(context, listen: false);
     String currentTime = getCurrentTimeInISO();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String id = prefs.getString('userId') ?? "";
-    await offer.getTopOffer(currentTime);
-    await car.getTopLatestCar();
-    await promo.getLatestPromo(1, currentTime, 3);
-    await promo.getUserPromo();
-    await booking.getAllUserBooking();
-    await company.getLastCompany();
-    await car.getTopRatedCar(1, 4);
-    if(id != ""){
-      await user.getUserDetails(id);
+    try {
+      final List<Future<dynamic>> fetchers = [
+        offer.getTopOffer(currentTime),
+        car.getTopLatestCar(),
+        review.getAllUserReview(),
+        promo.getLatestPromo(1, currentTime, 3),
+        promo.getUserPromo(),
+        booking.getAllUserBooking(),
+        company.getLastCompany(),
+        car.getTopRatedCar(1, 4),
+        user.getUserDetails(),
+      ];
+      await Future.wait(fetchers);
+    } catch (e) {
+      throw Exception(e);
     }
   }
 
@@ -70,7 +75,6 @@ class _HomePageState extends State<HomePage> {
     var latestPromo = promo.latestPromo;
     var topRatedCar = car.topRatedCar;
     var latestCar = car.topLatestCar;
-
 
     return Scaffold(
       backgroundColor: tdWhite,
@@ -175,13 +179,13 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                               height: 15.h,
                             ),
-                             SectionTitle(
-                                title: 'Latest Vehicle',
-                                actionText: 'See more',
-                                onActionTap: (){
-                                  GoRouter.of(context).pushNamed('LatestCar');
-
-                                },),
+                            SectionTitle(
+                              title: 'Latest Vehicle',
+                              actionText: 'See more',
+                              onActionTap: () {
+                                GoRouter.of(context).pushNamed('LatestCar');
+                              },
+                            ),
                             SizedBox(height: 10.h),
                             CarDisplayCard(carData: latestCar),
                             SizedBox(height: 15.h),

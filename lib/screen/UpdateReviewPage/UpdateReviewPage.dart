@@ -1,28 +1,57 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carrent/Api/ReviewService.dart';
-import 'package:carrent/Widget/Toast/ToastError.dart';
-import 'package:carrent/Widget/Toast/ToastValidation.dart';
-import 'package:carrent/core/Color/color.dart';
-import 'package:carrent/model/Car/CarModel.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:carrent/Api/ReviewService.dart";
+import "package:carrent/Widget/Toast/ToastError.dart";
+import "package:carrent/Widget/Toast/ToastValidation.dart";
+import "package:carrent/core/Color/color.dart";
+import "package:carrent/model/Car/CarModel.dart";
+import "package:carrent/provider/Review_Provider.dart";
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
+import "package:provider/provider.dart";
 
-class AddReviewPage extends StatefulWidget {
-  const AddReviewPage({super.key, required this.car});
+class UpdateReviewPage extends StatefulWidget {
+  const UpdateReviewPage({super.key, required this.car});
 
   final Car car;
   @override
-  State<AddReviewPage> createState() => _AddReviewPageState();
+  State<UpdateReviewPage> createState() => _UpdateReviewPageState();
 }
 
-class _AddReviewPageState extends State<AddReviewPage> {
+class _UpdateReviewPageState extends State<UpdateReviewPage> {
   int _selectedStars = 0;
-  final TextEditingController _textReview = TextEditingController();
+  late TextEditingController _textReview = TextEditingController();
   bool isLoading = false;
 
-  void createReview(int star, String text, String carId) async {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final review = Provider.of<ReviewProvider>(context, listen: false);
+      var userReview = review.userReview;
+
+      bool hasReview =
+          userReview.any((review) => review.carId == widget.car.id);
+
+      if (hasReview) {
+        setState(() {
+          _selectedStars = userReview
+              .firstWhere((review) => review.carId == widget.car.id)
+              .rate;
+          _textReview = TextEditingController(
+              text: userReview
+                  .firstWhere((review) => review.carId == widget.car.id)
+                  .reviewText);
+        });
+      } else {
+        GoRouter.of(context).pop();
+      }
+    });
+  }
+
+  void updateReview(int star, String text, String reviewId) async {
     ReviewService service = ReviewService();
+    final review = Provider.of<ReviewProvider>(context, listen: false);
     setState(() {
       isLoading = true;
     });
@@ -35,8 +64,9 @@ class _AddReviewPageState extends State<AddReviewPage> {
         showValidationToast('review Text is required');
         return;
       }
-      bool isCreated = await service.createReview(star, text, carId);
-      if (isCreated) {
+      bool isUpdated = await service.updateReview(reviewId, star, text);
+      if (isUpdated) {
+        review.getAllUserReview();
         setState(() {
           context.pop();
         });
@@ -52,7 +82,16 @@ class _AddReviewPageState extends State<AddReviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    
+    final reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
+    var userReview = reviewProvider.userReview;
+
+    bool hasReview = userReview.any((review) => review.carId == widget.car.id);
+    String? reviewId;
+
+    if (hasReview) {
+      reviewId =
+          userReview.firstWhere((review) => review.carId == widget.car.id).id;
+    }
     return Scaffold(
       backgroundColor: tdWhite,
       body: SafeArea(
@@ -72,7 +111,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
                         Icon(Icons.arrow_back_ios, size: 20.w, color: tdGrey)),
                 SizedBox(height: 10.h),
                 Text(
-                  "Review",
+                  "Update Review",
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
@@ -187,8 +226,8 @@ class _AddReviewPageState extends State<AddReviewPage> {
             onTap: isLoading
                 ? null
                 : () {
-                    createReview(
-                        _selectedStars, _textReview.text, widget.car.id);
+                    updateReview(
+                        _selectedStars, _textReview.text, reviewId.toString());
                   },
             child: Container(
               width: double.infinity,
@@ -198,7 +237,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
                   borderRadius: BorderRadius.circular(12).w),
               child: Center(
                 child: Text(
-                  isLoading ? "Sending..." : "Send",
+                  isLoading ? "Updating..." : "Update review",
                   style: TextStyle(
                       fontSize: 15.sp,
                       color: tdWhite,

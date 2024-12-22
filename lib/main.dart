@@ -5,6 +5,7 @@ import 'package:carrent/provider/Company_Provider.dart';
 import 'package:carrent/provider/Feature_Provider.dart';
 import 'package:carrent/provider/Offer_Provider.dart';
 import 'package:carrent/provider/Promo_Provider.dart';
+import 'package:carrent/provider/Review_Provider.dart';
 import 'package:carrent/provider/Search_Provider.dart';
 import 'package:carrent/provider/User_Provider.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,8 @@ void main() async {
       ChangeNotifierProvider(create: (_) => FeatureProvider()),
       ChangeNotifierProvider(create: (_) => UserProvider()),
       ChangeNotifierProvider(create: (_) => BookingProvider()),
-      ChangeNotifierProvider(create: (_) => SerachProvider())
+      ChangeNotifierProvider(create: (_) => SerachProvider()),
+      ChangeNotifierProvider(create: (_) => ReviewProvider())
     ],
     child: const MyApp(),
   ));
