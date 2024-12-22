@@ -98,11 +98,11 @@ class BookingCarCard extends StatelessWidget {
                         Icon(Icons.star,color: tdWhite,size: 15.w,),
                         SizedBox(width: 2.w,),
                         Text(
-                            'Rate car',
+                            'Rate this car',
                             style: TextStyle(
                                 fontSize: 8.sp,
                                 color: tdWhite,
-                                fontWeight: FontWeight.w500),
+                                fontWeight: FontWeight.bold),
                           ),
                       ],
                     ),

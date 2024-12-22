@@ -546,6 +546,7 @@ class _SearchPageState extends State<SearchPage> {
                               ),
                             ),
                           ),
+                          SizedBox(height: 10.h),
                           Consumer<SerachProvider>(
                             builder: (context, carProvider, child) {
                               return carProvider.isLoading &&
