@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "98319106302",
+    "project_id": "carrent-eb65c",
+    "storage_bucket": "carrent-eb65c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98319106302:android:4b839414ebfa4b1e80a5af",
+        "android_client_info": {
+          "package_name": "com.example.carrent"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3VnKhdWp5UAYt1enihoKU8t_IqkKpsBs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

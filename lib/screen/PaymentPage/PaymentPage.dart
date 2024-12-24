@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key, required this.car});
@@ -21,50 +22,50 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   DateTime? startDate;
   DateTime? endDate;
+  final DateRangePickerController _controller = DateRangePickerController();
 
-  /// Opens the date picker to select the end date.
-  void pickEndDate() async {
-    final DateTime today = DateTime.now();
-    final DateTime oneYearLater = today.add(const Duration(days: 365));
-
-    final DateTime? selectedDate = await showDatePicker(
+  // Function to show the dialog with the date range picker
+  void _showDateRangePickerDialog() {
+    showDialog(
       context: context,
-      initialDate: today.add(const Duration(days: 1)),
-      firstDate: today.add(const Duration(days: 1)),
-      lastDate: oneYearLater,
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            primaryColor: tdBlueLight,
-            scaffoldBackgroundColor: tdBlack,
-            dialogBackgroundColor: tdBlack,
-            textTheme: const TextTheme(
-              headline6: TextStyle(color: tdBlueLight), // Header text color
-              bodyText2:
-                  TextStyle(color: tdBlueLight), // Calendar date text color
-            ),
-            colorScheme: const ColorScheme.light(
-              primary: tdBlueLight,
-              onPrimary: tdBlack,
-              onSurface: tdBlueLight,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: tdBlueLight, // Button text color
-              ),
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Container(
+            child: Column(
+              children: [
+                Text(
+                  'Select a Date Range',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Expanded(
+                  child: SfDateRangePicker(
+                    controller: _controller,
+                    onSelectionChanged:
+                        (DateRangePickerSelectionChangedArgs args) {
+                      setState(() {
+                        if (args.value is PickerDateRange) {
+                          final range = args.value as PickerDateRange;
+                          startDate = range.startDate;
+                          endDate = range.endDate;
+                        }
+                      });
+                    },
+                    selectionMode: DateRangePickerSelectionMode.range,
+                    showActionButtons: true,
+                    initialDisplayDate: DateTime.now(),
+                    minDate: DateTime.now(),
+                  ),
+                ),
+                
+              ],
             ),
           ),
-          child: child!,
         );
       },
     );
-
-    if (selectedDate != null) {
-      setState(() {
-        startDate = today;
-        endDate = selectedDate;
-      });
-    }
   }
 
   /// Calculates the total rental days.
@@ -108,7 +109,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 _buildCarDetails(),
                 SizedBox(height: 15.h),
                 GestureDetector(
-                  onTap: pickEndDate,
+                  onTap: _showDateRangePickerDialog,
                   child: Text(
                     'Select Rental Dates',
                     style: TextStyle(
@@ -181,7 +182,7 @@ class _PaymentPageState extends State<PaymentPage> {
               SizedBox(
                 height: 10.h,
               ),
-              _buildPriceInfo(widget.car.rentPrice, 3),
+              _buildPriceInfo(widget.car.rentPrice),
               SizedBox(
                 height: 10.h,
               ),
@@ -295,15 +296,15 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Widget _buildPriceInfo(double carPrice, double deliveryPrice) {
+  Widget _buildPriceInfo(double carPrice) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const RenterInfoLabel(label: 'Trip price'),
-            const RenterInfoLabel(label: 'Delivery price'),
+            const RenterInfoLabel(label: 'Main price'),
+            const RenterInfoLabel(label: 'Discount percent'),
             Text(
               'Total',
               style: TextStyle(
@@ -324,14 +325,14 @@ class _PaymentPageState extends State<PaymentPage> {
               height: 5.h,
             ),
             Text(
-              '\$$deliveryPrice',
+              '0%',
               style: _renterInfoStyle(),
             ),
             SizedBox(
               height: 10.h,
             ),
             Text(
-              '\$${deliveryPrice + carPrice}',
+              '\$$carPrice',
               style: _renterInfoStyle(),
             ),
           ],

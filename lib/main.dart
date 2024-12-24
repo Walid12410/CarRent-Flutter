@@ -1,3 +1,4 @@
+import 'package:carrent/Api/FirebaseService.dart';
 import 'package:carrent/provider/Booking_Provider.dart';
 import 'package:carrent/provider/Car_Provider.dart';
 import 'package:carrent/provider/Category_Provider.dart';
@@ -8,6 +9,7 @@ import 'package:carrent/provider/Promo_Provider.dart';
 import 'package:carrent/provider/Review_Provider.dart';
 import 'package:carrent/provider/Search_Provider.dart';
 import 'package:carrent/provider/User_Provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,11 @@ import 'core/Route/GoRouter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Firbase initialization
+  await Firebase.initializeApp();
+  await FirebaseApi().initNotification();
+
   // Fetch isLoggedIn status
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;

@@ -2,7 +2,7 @@ import "package:carrent/core/Color/color.dart";
 import "package:carrent/model/Company/CompanyModel.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
-
+import "package:carrent/core/UrlLuncher/UrlLuncherHelpe.dart";
 
 
 class CompanyProfileHeader extends StatelessWidget {
@@ -43,7 +43,9 @@ class CompanyProfileHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                      await URLLauncher.openMap(companyData!.latitude, companyData!.longitude);
+                  },
                   icon: Icon(
                     Icons.location_on_rounded,
                     color: tdBlue,

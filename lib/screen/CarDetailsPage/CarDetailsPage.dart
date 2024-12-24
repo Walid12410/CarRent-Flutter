@@ -1,9 +1,13 @@
 import "package:carrent/core/Time/CurrentTime.dart";
+import "package:carrent/model/Review/ReviewModel.dart";
 import "package:carrent/provider/Car_Provider.dart";
 import "package:carrent/provider/Offer_Provider.dart";
+import "package:carrent/provider/Review_Provider.dart";
+import "package:carrent/provider/User_Provider.dart";
 import "package:carrent/screen/CarDetailsPage/Details/CarDetailsImage.dart";
 import "package:carrent/screen/CarDetailsPage/Details/CarDetailsView.dart";
-import "package:carrent/screen/CarDetailsPage/Details/ReviewCard.dart";
+import 'package:carrent/Widget/Review/ReviewCard.dart';
+import "package:carrent/screen/CarDetailsPage/Details/UserReviewCard.dart";
 import "package:flutter/material.dart";
 import "package:carrent/core/Color/color.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
@@ -42,8 +46,12 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
   Widget build(BuildContext context) {
     final car = Provider.of<CarProvider>(context, listen: true);
     final offer = Provider.of<OfferProvider>(context, listen: true);
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
+    final reviewProvider = Provider.of<ReviewProvider>(context, listen: true);
     var carData = car.carDetails;
     var isOffer = offer.carOffer;
+    var userReviews = reviewProvider.userReview;
+    var user = userProvider.userDetails;
 
     if (carData == null || carData.id != widget.carId) {
       return const Center(
@@ -51,6 +59,17 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
           color: tdBlueLight,
         ),
       );
+    }
+
+    bool hasReview =
+        userReviews.any((isReview) => isReview.carId == carData.id);
+    Review? reviewUser;
+
+    if (hasReview) {
+      setState(() {
+        reviewUser =
+            userReviews.firstWhere((isReview) => isReview.carId == carData.id);
+      });
     }
 
     return Scaffold(
@@ -125,6 +144,12 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                                     )
                                   : Column(
                                       children: [
+                                        if (hasReview &&
+                                            reviewUser != null) ...[
+                                          UserReviewCard(
+                                              reviewUser: reviewUser,
+                                              user: user),
+                                        ],
                                         ListView.builder(
                                           shrinkWrap:
                                               true, // Allows the ListView to fit within the Column
@@ -143,6 +168,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                                             return ReviewCard(
                                               review: review,
                                               formattedDate: formattedDate,
+                                              car: carData,
                                             );
                                           },
                                         ),
@@ -208,7 +234,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                             decoration: TextDecoration.lineThrough,
                             decorationThickness: 3,
                             decorationColor: tdGrey,
-                            ),   
+                          ),
                         ),
                         Text(
                           '   \$${isOffer.first.discountPrice}/ day',

@@ -1,20 +1,26 @@
+import "package:awesome_dialog/awesome_dialog.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:carrent/Widget/StarRating.dart";
 import "package:carrent/core/Color/color.dart";
 import "package:carrent/model/Review/ReviewModel.dart";
+import "package:carrent/model/User/UserModel.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:intl/intl.dart";
 
+class UserReviewCard extends StatelessWidget {
+  const UserReviewCard(
+      {super.key, required this.reviewUser, required this.user});
 
-class ReviewCard extends StatelessWidget {
-  const ReviewCard(
-      {super.key, required this.review, required this.formattedDate});
-
-  final Review review;
-  final String formattedDate;
+  final Review? reviewUser;
+  final User? user;
 
   @override
   Widget build(BuildContext context) {
+    DateTime parsedDate =
+        DateTime.parse(reviewUser!.createdAt); // Parse the ISO date
+    String formattedDate = DateFormat('MMM d, y').format(parsedDate);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -31,7 +37,7 @@ class ReviewCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12).w,
                 child: CachedNetworkImage(
-                  imageUrl: review.userDetails!.photo!.url,
+                  imageUrl: user!.photo!.url,
                   fit: BoxFit.fill,
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
@@ -52,7 +58,7 @@ class ReviewCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          '${review.userDetails!.firstName} ${review.userDetails!.lastName}',
+                          '${user!.firstName} ${user!.lastName}',
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: tdBlueLight,
@@ -74,10 +80,48 @@ class ReviewCard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 5.h),
-                  StarRating(rating: review.rate.toDouble()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      StarRating(rating: reviewUser!.rate.toDouble()),
+                      GestureDetector(
+                          onTap: () {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.warning,
+                              headerAnimationLoop: false,
+                              animType: AnimType.bottomSlide,
+                              title: 'Are you sure?',
+                              desc: 'Do you want to delete this rate?',
+                              titleTextStyle: TextStyle(
+                                  fontSize: 18.sp,
+                                  color: tdBlack,
+                                  fontWeight: FontWeight.bold),
+                              descTextStyle: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: tdBlack,
+                                  fontWeight: FontWeight.w400),
+                              btnCancelOnPress: () {
+                                // Action when "Cancel" is pressed
+                                print("Cancelled");
+                              },
+                              btnOkOnPress: () {
+                                // Action when "Delete" is confirmed
+                                print("Deleted");
+                                // Add your delete logic here
+                              },
+                              btnCancelText: "Cancel",
+                              btnOkText: "Delete",
+                              btnOkColor: Colors.red,
+                            ).show();
+                          },
+                          child: Icon(Icons.delete,
+                              color: Colors.red, size: 20.w)),
+                    ],
+                  ),
                   SizedBox(height: 2.h),
                   Text(
-                    "`${review.reviewText}`",
+                    "`${reviewUser!.reviewText}`",
                     style: TextStyle(
                       fontSize: 12.sp,
                       color: tdGrey,
@@ -96,4 +140,3 @@ class ReviewCard extends StatelessWidget {
     );
   }
 }
-

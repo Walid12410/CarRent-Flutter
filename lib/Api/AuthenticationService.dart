@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:carrent/Api/FirebaseService.dart';
 import 'package:carrent/Widget/Toast/ToastError.dart';
 import 'package:carrent/Widget/Toast/ToastSuccess.dart';
 import 'package:carrent/Widget/Toast/ToastValidation.dart';
@@ -22,6 +23,8 @@ class Authentication {
         prefs.setString('userId',responseBody['_id']);
         prefs.setString('userToken',responseBody['token']);
         prefs.setBool('isLoggedIn', true);
+        FirebaseApi service = FirebaseApi();
+        service.saveToken();
         // login success
         showSucessToast('Success');
         return true;
