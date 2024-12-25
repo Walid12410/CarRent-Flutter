@@ -4,6 +4,7 @@ import 'package:carrent/provider/Car_Provider.dart';
 import 'package:carrent/provider/Category_Provider.dart';
 import 'package:carrent/provider/Company_Provider.dart';
 import 'package:carrent/provider/Feature_Provider.dart';
+import 'package:carrent/provider/Notification_Provider.dart';
 import 'package:carrent/provider/Offer_Provider.dart';
 import 'package:carrent/provider/Promo_Provider.dart';
 import 'package:carrent/provider/Review_Provider.dart';
@@ -41,7 +42,8 @@ void main() async {
       ChangeNotifierProvider(create: (_) => UserProvider()),
       ChangeNotifierProvider(create: (_) => BookingProvider()),
       ChangeNotifierProvider(create: (_) => SerachProvider()),
-      ChangeNotifierProvider(create: (_) => ReviewProvider())
+      ChangeNotifierProvider(create: (_) => ReviewProvider()),
+      ChangeNotifierProvider(create: (_) => NotificationProvider())
     ],
     child: const MyApp(),
   ));
