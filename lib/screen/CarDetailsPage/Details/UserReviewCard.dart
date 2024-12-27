@@ -14,11 +14,10 @@ import "package:provider/provider.dart";
 
 class UserReviewCard extends StatefulWidget {
   const UserReviewCard(
-      {super.key, required this.reviewUser, required this.user,required this.onDeleteReview});
+      {super.key, required this.reviewUser, required this.user});
 
   final Review? reviewUser;
   final User? user;
-  final void Function() onDeleteReview;
 
   @override
   State<UserReviewCard> createState() => _UserReviewCardState();
@@ -34,11 +33,11 @@ class _UserReviewCardState extends State<UserReviewCard> {
         isLoading = true; // Start loading
       }); // Update the UI
       await service.deleteReview(widget.reviewUser!.id);
-      widget.onDeleteReview();
       setState(() {
         final reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
         reviewProvider.removeUserReviewById(widget.reviewUser!.id);
         reviewProvider.getAllUserReview();
+        Navigator.of(context).pop();
       });
     } catch (error) {
       showToast('Something went wrong');

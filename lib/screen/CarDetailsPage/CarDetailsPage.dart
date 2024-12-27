@@ -72,11 +72,6 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
       });
     }
 
-    void onDeleteReview() {
-      setState(() {
-        reviewUser = null;
-      });
-    }
 
     return Scaffold(
       backgroundColor: tdWhite,
@@ -154,8 +149,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                                             reviewUser != null) ...[
                                           UserReviewCard(
                                               reviewUser: reviewUser,
-                                              user: user,
-                                              onDeleteReview: onDeleteReview),
+                                              user: user ),
                                         ],
                                         ListView.builder(
                                           shrinkWrap:
