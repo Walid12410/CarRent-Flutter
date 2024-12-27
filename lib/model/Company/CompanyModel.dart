@@ -36,7 +36,7 @@ class Company {
       id: json['_id'] ?? '',
       companyName: json['companyName'] ?? '',
       companyEmail: json['companyEmail'] ?? '',
-      companyPhoneNumber: json['CompanyPhoneNumber'] ?? '',
+      companyPhoneNumber: json['companyPhoneNumber'] ?? '',
       companyAddress: json['address'] ?? '',
       companyCity: json['city'] ?? '',
       companyCountry: json['country'] ?? '',

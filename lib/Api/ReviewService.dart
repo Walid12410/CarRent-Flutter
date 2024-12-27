@@ -42,6 +42,35 @@ class ReviewService {
     }
   }
 
+    Future<bool> deleteReview(String reviewId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('userToken') ?? '';
+    try {
+      final response = await http.delete(
+          Uri.parse('${ApiEndpoints.apiUrl}/api/review/$reviewId'),
+          headers: {
+            'Authorization': 'Bearer $token'
+          },
+      );
+      final responseBody = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        showSucessToast('Review deleted successfully!');
+        return true;
+      } else if (response.statusCode == 404) {
+        showValidationToast(responseBody['message']);
+        return false;
+      } else {
+        showToast(responseBody['message']);
+        return false;
+      }
+    } catch (e) {
+      showToast('Something went wrong, check you connection');
+      return false;
+    }
+  }
+
+
   Future<bool> updateReview(String reviewId, int reviewRate, String reviewText) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('userToken') ?? '';
@@ -89,10 +118,28 @@ class ReviewService {
             jsonData.map((json) => Review.fromJson(json)).toList();
         return userReview;
       } else {
-        throw Exception('Failed to load promo details');
+        throw Exception('Failed to load user reviews');
       }
     } catch (e) {
       throw Exception('Server Error $e');
     }
   }
+
+  Future<List<Review>> fetchCarReview(int page, int limit,String carId) async {
+    try {
+      final response = await http.get(
+          Uri.parse('${ApiEndpoints.apiUrl}/api/review/$carId?pageNumber=$page&limitPerPage=$limit'));
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = json.decode(response.body);
+        List<Review> carReviews =
+            jsonData.map((json) => Review.fromJson(json)).toList();
+        return carReviews;
+      } else {
+        throw Exception('Failed to load car reviews');
+      }
+    } catch (e) {
+      throw Exception('Server Error $e');
+    }
+  }
+
 }

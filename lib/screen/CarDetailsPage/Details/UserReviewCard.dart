@@ -1,24 +1,58 @@
 import "package:awesome_dialog/awesome_dialog.dart";
 import "package:cached_network_image/cached_network_image.dart";
+import "package:carrent/Api/ReviewService.dart";
 import "package:carrent/Widget/StarRating.dart";
+import "package:carrent/Widget/Toast/ToastError.dart";
 import "package:carrent/core/Color/color.dart";
 import "package:carrent/model/Review/ReviewModel.dart";
 import "package:carrent/model/User/UserModel.dart";
+import "package:carrent/provider/Review_Provider.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:intl/intl.dart";
+import "package:provider/provider.dart";
 
-class UserReviewCard extends StatelessWidget {
+class UserReviewCard extends StatefulWidget {
   const UserReviewCard(
-      {super.key, required this.reviewUser, required this.user});
+      {super.key, required this.reviewUser, required this.user,required this.onDeleteReview});
 
   final Review? reviewUser;
   final User? user;
+  final void Function() onDeleteReview;
+
+  @override
+  State<UserReviewCard> createState() => _UserReviewCardState();
+}
+
+class _UserReviewCardState extends State<UserReviewCard> {
+  bool isLoading = false;
+
+  Future<void> deleteReview() async {
+    ReviewService service = ReviewService();
+    try {
+      setState(() {
+        isLoading = true; // Start loading
+      }); // Update the UI
+      await service.deleteReview(widget.reviewUser!.id);
+      widget.onDeleteReview();
+      setState(() {
+        final reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
+        reviewProvider.removeUserReviewById(widget.reviewUser!.id);
+        reviewProvider.getAllUserReview();
+      });
+    } catch (error) {
+      showToast('Something went wrong');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     DateTime parsedDate =
-        DateTime.parse(reviewUser!.createdAt); // Parse the ISO date
+        DateTime.parse(widget.reviewUser!.createdAt); // Parse the ISO date
     String formattedDate = DateFormat('MMM d, y').format(parsedDate);
 
     return Column(
@@ -37,7 +71,7 @@ class UserReviewCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12).w,
                 child: CachedNetworkImage(
-                  imageUrl: user!.photo!.url,
+                  imageUrl: widget.user!.photo!.url,
                   fit: BoxFit.fill,
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
@@ -58,7 +92,7 @@ class UserReviewCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          '${user!.firstName} ${user!.lastName}',
+                          '${widget.user!.firstName} ${widget.user!.lastName}',
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: tdBlueLight,
@@ -83,7 +117,7 @@ class UserReviewCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      StarRating(rating: reviewUser!.rate.toDouble()),
+                      StarRating(rating: widget.reviewUser!.rate.toDouble()),
                       GestureDetector(
                           onTap: () {
                             AwesomeDialog(
@@ -101,17 +135,14 @@ class UserReviewCard extends StatelessWidget {
                                   fontSize: 12.sp,
                                   color: tdBlack,
                                   fontWeight: FontWeight.w400),
-                              btnCancelOnPress: () {
-                                // Action when "Cancel" is pressed
-                                print("Cancelled");
-                              },
-                              btnOkOnPress: () {
-                                // Action when "Delete" is confirmed
-                                print("Deleted");
-                                // Add your delete logic here
-                              },
+                              btnCancelOnPress: () {},
+                              btnOkOnPress: isLoading
+                                  ? null
+                                  : () async {
+                                      await deleteReview();
+                                    },
                               btnCancelText: "Cancel",
-                              btnOkText: "Delete",
+                              btnOkText: isLoading ? "Loading..." : "Delete",
                               btnOkColor: Colors.red,
                             ).show();
                           },
@@ -121,7 +152,7 @@ class UserReviewCard extends StatelessWidget {
                   ),
                   SizedBox(height: 2.h),
                   Text(
-                    "`${reviewUser!.reviewText}`",
+                    "`${widget.reviewUser!.reviewText}`",
                     style: TextStyle(
                       fontSize: 12.sp,
                       color: tdGrey,

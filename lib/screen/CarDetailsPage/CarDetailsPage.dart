@@ -72,6 +72,12 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
       });
     }
 
+    void onDeleteReview() {
+      setState(() {
+        reviewUser = null;
+      });
+    }
+
     return Scaffold(
       backgroundColor: tdWhite,
       body: SafeArea(
@@ -148,7 +154,8 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                                             reviewUser != null) ...[
                                           UserReviewCard(
                                               reviewUser: reviewUser,
-                                              user: user),
+                                              user: user,
+                                              onDeleteReview: onDeleteReview),
                                         ],
                                         ListView.builder(
                                           shrinkWrap:
@@ -168,15 +175,17 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                                             return ReviewCard(
                                               review: review,
                                               formattedDate: formattedDate,
-                                              car: carData,
                                             );
                                           },
                                         ),
                                         carData.reviewCount > 2
                                             ? TextButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  context.push(
+                                                      '/CarReviewList/${carData.id}');
+                                                },
                                                 child: Text(
-                                                  'See more review',
+                                                  'See all reviews',
                                                   style: TextStyle(
                                                       fontSize: 12.sp,
                                                       color: tdBlue,

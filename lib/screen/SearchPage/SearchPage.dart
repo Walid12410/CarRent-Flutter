@@ -566,6 +566,7 @@ class _SearchPageState extends State<SearchPage> {
                                             ));
                                           }
                                           Car car = carProvider.cars[index];
+                                          print(car);
                                           return SearchCarCard(car: car);
                                         },
                                         controller: ScrollController()

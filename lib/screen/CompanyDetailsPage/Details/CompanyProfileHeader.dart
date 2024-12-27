@@ -3,6 +3,7 @@ import "package:carrent/model/Company/CompanyModel.dart";
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:carrent/core/UrlLuncher/UrlLuncherHelpe.dart";
+import "package:go_router/go_router.dart";
 
 
 class CompanyProfileHeader extends StatelessWidget {
@@ -87,7 +88,9 @@ class CompanyProfileHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.push('/companyMoreDetails');
+                  },
                   icon: Icon(
                     Icons.assessment_rounded,
                     color: tdBlue,

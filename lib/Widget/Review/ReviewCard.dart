@@ -1,7 +1,6 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:carrent/Widget/StarRating.dart";
 import "package:carrent/core/Color/color.dart";
-import "package:carrent/model/CarDetails/CarDetailsModel.dart";
 import "package:carrent/model/Review/ReviewModel.dart";
 import "package:carrent/provider/Review_Provider.dart";
 import "package:flutter/material.dart";
@@ -13,11 +12,10 @@ class ReviewCard extends StatelessWidget {
       {super.key,
       required this.review,
       required this.formattedDate,
-      required this.car});
+      });
 
   final Review review;
   final String formattedDate;
-  final CarDetails car;
 
   @override
   Widget build(BuildContext context) {

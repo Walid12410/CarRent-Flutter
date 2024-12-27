@@ -112,7 +112,7 @@ class SerachProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         if (data['success']) {
-          List<dynamic> carsJson = data['date'];
+          List<dynamic> carsJson = data['data'];
           _cars = carsJson.map((car) => Car.fromJson(car)).toList();
           totalResults = data['total'];
         } else {

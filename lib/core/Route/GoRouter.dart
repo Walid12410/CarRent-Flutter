@@ -1,12 +1,15 @@
 import 'package:carrent/model/Car/CarModel.dart';
 import 'package:carrent/model/CarDetails/CarDetailsModel.dart';
+import 'package:carrent/model/Company/CompanyModel.dart';
 import 'package:carrent/screen/AuthenticationPages/LogIn/LogInPage.dart';
 import 'package:carrent/screen/AuthenticationPages/Register/SignUpPage.dart';
 import 'package:carrent/screen/CarCategoryListPage/CarCategoryListPage.dart';
 import 'package:carrent/screen/CarCategoryPage/CategoryPage.dart';
 import 'package:carrent/screen/CarDetailsPage/CarDetailsPage.dart';
+import 'package:carrent/screen/CarReviewListPage/CarReviewListPage.dart';
 import 'package:carrent/screen/ChangePasswordPage/ChangePasswordPage.dart';
 import 'package:carrent/screen/CompanyCarListPage/CompanyCarList.dart';
+import 'package:carrent/screen/CompanyDetailMorePage/CompanyMoreDetailsPage.dart';
 import 'package:carrent/screen/CompanyDetailsPage/CompanyDetailsPage.dart';
 import 'package:carrent/screen/CompanyListPage/CompanyListPage.dart';
 import 'package:carrent/screen/HomePage/HomePage.dart';
@@ -287,6 +290,14 @@ class AppNavigation {
         },
       ),
       GoRoute(
+        path: '/CarReviewList/:id', // Using path parameters for dynamic content
+        name: 'CarReviewList',
+        builder: (context, state) {
+          final carId = state.pathParameters['id']!;
+          return CarReviewList(carId: carId);
+        },
+      ),
+      GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/signUp',
         name: "SignUp",
@@ -308,6 +319,14 @@ class AppNavigation {
             car: car,
           );
         },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/companyMoreDetails',
+        name: "CompanyMoreDetails",
+        builder: (context, state) => CompanyMoreDetails(
+            key: state.pageKey,
+          ),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
@@ -363,7 +382,6 @@ class AppNavigation {
           return UpdateReviewPage(car: car);
         },
       ),
-
     ],
   );
 }

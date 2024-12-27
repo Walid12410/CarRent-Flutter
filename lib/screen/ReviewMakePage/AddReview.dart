@@ -4,9 +4,11 @@ import 'package:carrent/Widget/Toast/ToastError.dart';
 import 'package:carrent/Widget/Toast/ToastValidation.dart';
 import 'package:carrent/core/Color/color.dart';
 import 'package:carrent/model/Car/CarModel.dart';
+import 'package:carrent/provider/Review_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class AddReviewPage extends StatefulWidget {
   const AddReviewPage({super.key, required this.car});
@@ -38,6 +40,9 @@ class _AddReviewPageState extends State<AddReviewPage> {
       bool isCreated = await service.createReview(star, text, carId);
       if (isCreated) {
         setState(() {
+          final reviewProvider =
+              Provider.of<ReviewProvider>(context, listen: false);
+          reviewProvider.getAllUserReview();
           context.pop();
         });
       }
@@ -52,7 +57,6 @@ class _AddReviewPageState extends State<AddReviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       backgroundColor: tdWhite,
       body: SafeArea(
