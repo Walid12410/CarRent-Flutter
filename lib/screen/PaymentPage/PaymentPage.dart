@@ -8,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key, required this.car});
@@ -22,50 +21,36 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   DateTime? startDate;
   DateTime? endDate;
-  final DateRangePickerController _controller = DateRangePickerController();
 
-  // Function to show the dialog with the date range picker
-  void _showDateRangePickerDialog() {
-    showDialog(
+  // Function to show the date range picker dialog
+  Future<void> pickerDateRange() async {
+    DateTimeRange? newDateRange = await showDateRangePicker(
       context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Container(
-            child: Column(
-              children: [
-                Text(
-                  'Select a Date Range',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Expanded(
-                  child: SfDateRangePicker(
-                    controller: _controller,
-                    onSelectionChanged:
-                        (DateRangePickerSelectionChangedArgs args) {
-                      setState(() {
-                        if (args.value is PickerDateRange) {
-                          final range = args.value as PickerDateRange;
-                          startDate = range.startDate;
-                          endDate = range.endDate;
-                        }
-                      });
-                    },
-                    selectionMode: DateRangePickerSelectionMode.range,
-                    showActionButtons: true,
-                    initialDisplayDate: DateTime.now(),
-                    minDate: DateTime.now(),
-                  ),
-                ),
-                
-              ],
+      initialDateRange: DateTimeRange(
+        start: startDate ?? DateTime.now(),
+        end: endDate ?? DateTime.now().add(const Duration(days: 30)),
+      ),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 30)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: tdBlueLight, // Selection handle and range color
+              onPrimary: tdWhite, // Text color for selected date
             ),
           ),
+          child: child!,
         );
       },
     );
+
+    if (newDateRange != null) {
+      setState(() {
+        startDate = newDateRange.start;
+        endDate = newDateRange.end;
+      });
+    }
   }
 
   /// Calculates the total rental days.
@@ -109,7 +94,9 @@ class _PaymentPageState extends State<PaymentPage> {
                 _buildCarDetails(),
                 SizedBox(height: 15.h),
                 GestureDetector(
-                  onTap: _showDateRangePickerDialog,
+                  onTap: (){
+                    pickerDateRange();
+                  },
                   child: Text(
                     'Select Rental Dates',
                     style: TextStyle(
