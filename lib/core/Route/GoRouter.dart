@@ -1,6 +1,5 @@
 import 'package:carrent/model/Car/CarModel.dart';
 import 'package:carrent/model/CarDetails/CarDetailsModel.dart';
-import 'package:carrent/model/Company/CompanyModel.dart';
 import 'package:carrent/screen/AuthenticationPages/LogIn/LogInPage.dart';
 import 'package:carrent/screen/AuthenticationPages/Register/SignUpPage.dart';
 import 'package:carrent/screen/CarCategoryListPage/CarCategoryListPage.dart';
@@ -9,11 +8,13 @@ import 'package:carrent/screen/CarDetailsPage/CarDetailsPage.dart';
 import 'package:carrent/screen/CarReviewListPage/CarReviewListPage.dart';
 import 'package:carrent/screen/ChangePasswordPage/ChangePasswordPage.dart';
 import 'package:carrent/screen/CompanyCarListPage/CompanyCarList.dart';
+import 'package:carrent/screen/CompanyCarSearchPage/CompanyCarSearch.dart';
 import 'package:carrent/screen/CompanyDetailMorePage/CompanyMoreDetailsPage.dart';
 import 'package:carrent/screen/CompanyDetailsPage/CompanyDetailsPage.dart';
 import 'package:carrent/screen/CompanyListPage/CompanyListPage.dart';
 import 'package:carrent/screen/HomePage/HomePage.dart';
 import 'package:carrent/screen/LatestCarPageList/LatestCarPage.dart';
+import 'package:carrent/screen/LatestCarSearchPage/LatestCarSearchPage.dart';
 import 'package:carrent/screen/LimitedOfferPage/LimitedOfferPage.dart';
 import 'package:carrent/screen/MapPage/MapPage.dart';
 import 'package:carrent/screen/NotificationPage/NotificationPage.dart';
@@ -125,6 +126,19 @@ class AppNavigation {
                             FadeTransition(opacity: animation, child: child),
                       ),
                     ),
+                    GoRoute(
+                      path: 'LatestSearchCar',
+                      name: 'LatestSearchCar',
+                      pageBuilder: (context, state) =>
+                          CustomTransitionPage<void>(
+                        key: state.pageKey,
+                        child: const LatestCarSearchPage(),
+                        transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) =>
+                            FadeTransition(opacity: animation, child: child),
+                      ),
+                    ),
+
                     GoRoute(
                       path: 'Notification',
                       name: 'Notification',
@@ -278,6 +292,14 @@ class AppNavigation {
         builder: (context, state) {
           final companyId = state.pathParameters['id']!;
           return CompanyDetailsPage(companyId: companyId);
+        },
+      ),
+     GoRoute(
+        path: '/companyCarSearch/:id', // Using path parameters for dynamic content
+        name: 'companyCarSearch',
+        builder: (context, state) {
+          final companyId = state.pathParameters['id']!;
+          return CompanyCarSearchPage(companyId: companyId);
         },
       ),
       GoRoute(

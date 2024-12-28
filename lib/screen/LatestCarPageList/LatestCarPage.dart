@@ -87,7 +87,9 @@ class _LatestCarPageState extends State<LatestCarPage> {
                 size: 20.w,
                 color: tdGrey,
               ),
-              onPressed: () {},
+              onPressed: () {
+                context.pushNamed('LatestSearchCar');
+              },
             ),
           ),
         ],

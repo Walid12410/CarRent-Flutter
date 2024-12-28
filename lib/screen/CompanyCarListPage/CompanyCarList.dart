@@ -88,7 +88,9 @@ class _CompanyCarListState extends State<CompanyCarList> {
                 size: 20.w,
                 color: tdGrey,
               ),
-              onPressed: () {},
+              onPressed: () {
+                context.push('/companyCarSearch/${widget.companyId}');
+              },
             ),
           ),
         ],
