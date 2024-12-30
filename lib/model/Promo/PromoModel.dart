@@ -43,7 +43,7 @@ class Promo {
       usageLimit: json['usageLimit'] ?? 0,
       usedCount: json['usedCount'] ?? 0,
       status: json['status'] ?? '',
-      companyID: json['companyID'] ?? '',
+      companyID: json['companyId'] ?? '',
       promoTitle: json['promoTitle'] ?? '',
       promoDescription: json['promoDescription'] ?? '',
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),

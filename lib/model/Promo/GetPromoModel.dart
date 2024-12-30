@@ -1,3 +1,5 @@
+import 'package:carrent/model/Promo/PromoModel.dart';
+
 class GetPromo {
   final String id;
   final String userId;
@@ -8,6 +10,7 @@ class GetPromo {
   final String endDate;
   final String createdAt;
   final String updatedAt;
+  final Promo? promoDetails;
 
   GetPromo({
     required this.id,
@@ -19,6 +22,7 @@ class GetPromo {
     required this.endDate,
     required this.createdAt,
     required this.updatedAt,
+    required this.promoDetails
   });
 
   factory GetPromo.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,12 @@ class GetPromo {
       endDate: json['endDate'] ?? "",
       createdAt: json['createdAt'] ?? "",
       updatedAt: json['updatedAt'] ?? "",
+      promoDetails: json['promoDetails'] != null
+          ? (json['promoDetails'] is List &&
+                  (json['promoDetails'] as List).isNotEmpty
+              ? Promo.fromJson((json['promoDetails'] as List).first)
+              : Promo.fromJson(json['promoDetails']))
+          : null,
     );
   }
 }

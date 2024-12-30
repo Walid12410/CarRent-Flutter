@@ -1,6 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carrent/Widget/Toast/ToastError.dart';
 import 'package:carrent/core/Color/color.dart';
+import 'package:carrent/core/Time/CurrentTime.dart';
 import 'package:carrent/model/CarDetails/CarDetailsModel.dart';
+import 'package:carrent/model/Promo/GetPromoModel.dart';
+import 'package:carrent/provider/Offer_Provider.dart';
+import 'package:carrent/provider/Promo_Provider.dart';
 import 'package:carrent/provider/User_Provider.dart';
 import 'package:carrent/screen/PaymentPage/Details/RentalInfoLable.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +24,38 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
+  late Future<void> _fetchDataFuture;
   DateTime? startDate;
   DateTime? endDate;
+  TextEditingController promoCodeController = TextEditingController();
+  GetPromo? validPromo;
+  double finalPrice = 0.0;
+  int perentageSale = 0;
+  String promoCodeText = "Use a discount code"; 
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDataFuture = _fetchData();
+    final offer = Provider.of<OfferProvider>(context, listen: false);
+    var isOffer = offer.carOffer;
+
+    if (isOffer.isNotEmpty) {
+      finalPrice = double.parse(isOffer.first.discountPrice);
+    } else {
+      finalPrice = widget.car.rentPrice;
+    }
+  }
+
+  Future<void> _fetchData() async {
+    final offer = Provider.of<OfferProvider>(context, listen: false);
+    final promo = Provider.of<PromoProvider>(context, listen: false);
+    final user = Provider.of<UserProvider>(context, listen: false);
+    String currentTime = getCurrentTimeInISO();
+    await offer.getCarOffer(currentTime, widget.car.id);
+    await promo.getUserPromo();
+    await user.getUserDetails();
+  }
 
   // Function to show the date range picker dialog
   Future<void> pickerDateRange() async {
@@ -66,92 +101,275 @@ class _PaymentPageState extends State<PaymentPage> {
     return DateFormat('yyyy-MM-dd').format(date);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context, listen: true);
-    var userDetails = user.userDetails;
+  void checkAndSavePromo(String promoCode, List<GetPromo> userPromo) {
 
-    if (userDetails == null) {
-      return Container();
+    if(promoCode.isEmpty || promoCode == "") {
+      showToast('Enter a promo code');
+      return;
     }
 
-    return Scaffold(
-      backgroundColor: tdWhite,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20).w,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    final offer = Provider.of<OfferProvider>(context, listen: false);
+    var isOffer = offer.carOffer;
+
+    if (isOffer.isNotEmpty) {
+      finalPrice = double.parse(isOffer.first.discountPrice);
+    } else {
+      finalPrice = widget.car.rentPrice;
+    }
+
+    // Search for the promo by promoCode and check if it's unused
+    for (var promo in userPromo) {
+      if (promo.promoDetails!.promoCode == promoCode && !promo.isUsed) {
+        validPromo = promo;
+        break;
+      }
+    }
+
+    if (validPromo != null) {
+      if(validPromo!.promoDetails!.companyID != widget.car.companyId){
+        showToast('This promo code is not applicable to this company car');
+      }else {
+      setState(() {
+        promoCodeText = promoCode;
+        perentageSale = validPromo!.promoDetails!.discountPercentage;
+        finalPrice = finalPrice - (finalPrice * (perentageSale / 100));
+      });
+
+      }
+    } else {
+      showToast('No valid promo found for the provided promoCode');
+    }
+  }
+
+  void _showPromoCodeDialog() {
+    final promo = Provider.of<PromoProvider>(context, listen: false);
+    var userPromo = promo.userPromo;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: tdWhite,
+          surfaceTintColor: tdWhite,
+          title: Text(
+            "Enter you promo code",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12.sp,
+                color: tdBlueLight),
+          ),
+          content: TextField(
+            controller: promoCodeController,
+            cursorColor: tdBlueLight,
+            decoration: InputDecoration(
+              hintText: "Promo code",
+              hintStyle: TextStyle(color: tdGrey, fontSize: 10.sp),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: tdGrey),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: tdBlueLight),
+              ),
+              border: const OutlineInputBorder(
+                borderSide: BorderSide(color: tdBlueLight),
+              ),
+            ),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(height: 10.h),
-                _buildBackButton(context),
-                SizedBox(height: 10.h),
-                _buildSectionTitle('Checkout'),
-                SizedBox(height: 15.h),
-                _buildSectionTitle('CAR DETAIL', small: true),
-                SizedBox(height: 10.h),
-                _buildCarDetails(),
-                SizedBox(height: 15.h),
                 GestureDetector(
-                  onTap: (){
-                    pickerDateRange();
+                  onTap: () {
+                    checkAndSavePromo(promoCodeController.text, userPromo);
+                    Navigator.of(context).pop();
                   },
-                  child: Text(
-                    'Select Rental Dates',
-                    style: TextStyle(
-                      fontSize: 12.sp,
+                  child: Container(
+                    width: 100.w,
+                    padding: EdgeInsets.all(8.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(200),
                       color: tdBlueLight,
-                      fontWeight: FontWeight.bold,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          blurRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Apply",
+                        style: TextStyle(
+                          fontSize: 9.sp,
+                          color: tdWhite,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                if (startDate != null && endDate != null) ...[
-                  SizedBox(height: 5.h),
-                  _buildDateInfo('Start Date', formatDate(startDate!)),
-                  _buildDateInfo('End Date', formatDate(endDate!)),
-                  _buildDateInfo('Total Days', calculateTotalDays().toString()),
-                ],
-                SizedBox(height: 15.h),
-                _buildSectionTitle('RENTER INFORMATION', small: true),
-                SizedBox(height: 10.h),
-                _buildRenterInfo(userDetails),
-                SizedBox(
-                  height: 15.h,
-                ),
-                _buildSectionTitle('DISCOUNT', small: true),
-                SizedBox(
-                  height: 10.h,
-                ),
+                SizedBox(width: 10.w),
                 GestureDetector(
                   onTap: () {
-                    // @TODO call dialog to check promo code
+                    Navigator.of(context).pop();
                   },
                   child: Container(
-                    width: double.infinity,
+                    width: 100.w,
+                    padding: EdgeInsets.all(8.w),
                     decoration: BoxDecoration(
-                        border: Border.all(color: tdGrey),
-                        borderRadius: BorderRadius.circular(12).w,
-                        color: tdWhite),
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, bottom: 10, left: 10)
-                              .w,
+                      borderRadius: BorderRadius.circular(200),
+                      color: tdWhite,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          blurRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Center(
                       child: Text(
-                        'Use a discount code',
+                        "Cancel",
                         style: TextStyle(
-                            fontSize: 12.sp,
-                            color: tdBlueLight,
-                            fontWeight: FontWeight.w500),
+                          fontSize: 9.sp,
+                          color: tdBlueLight,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ],
             ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context, listen: true);
+    final offer = Provider.of<OfferProvider>(context, listen: true);
+    var userDetails = user.userDetails;
+    var isOffer = offer.carOffer;
+
+    if (userDetails == null) {
+      return Center(
+        child: Text(
+          'Something went wrong, try again later.',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15.sp,
+            color: tdGrey,
           ),
+          textAlign: TextAlign.center,
         ),
-      ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: tdWhite,
+      body: SafeArea(
+          child: FutureBuilder(
+        future: _fetchDataFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: tdBlack,
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Something went wrong, check your connection.',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15.sp,
+                  color: tdGrey,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            );
+          } else {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20).w,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.h),
+                    _buildBackButton(context),
+                    SizedBox(height: 10.h),
+                    _buildSectionTitle('Checkout'),
+                    SizedBox(height: 15.h),
+                    _buildSectionTitle('CAR DETAIL', small: true),
+                    SizedBox(height: 10.h),
+                    _buildCarDetails(),
+                    SizedBox(height: 15.h),
+                    GestureDetector(
+                      onTap: () {
+                        pickerDateRange();
+                      },
+                      child: Text(
+                        'Select Rental Dates',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: tdBlueLight,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    if (startDate != null && endDate != null) ...[
+                      SizedBox(height: 5.h),
+                      _buildDateInfo('Start Date', formatDate(startDate!)),
+                      _buildDateInfo('End Date', formatDate(endDate!)),
+                      _buildDateInfo(
+                          'Total Days', calculateTotalDays().toString()),
+                    ],
+                    SizedBox(height: 15.h),
+                    _buildSectionTitle('RENTER INFORMATION', small: true),
+                    SizedBox(height: 10.h),
+                    _buildRenterInfo(userDetails),
+                    SizedBox(
+                      height: 15.h,
+                    ),
+                    _buildSectionTitle('DISCOUNT', small: true),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _showPromoCodeDialog();
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: tdGrey),
+                            borderRadius: BorderRadius.circular(12).w,
+                            color: tdWhite),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                                  top: 10, bottom: 10, left: 10)
+                              .w,
+                          child: Text(
+                            promoCodeText,
+                            style: TextStyle(
+                                fontSize: 12.sp,
+                                color: tdBlueLight,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+        },
+      )),
       bottomNavigationBar: BottomAppBar(
         surfaceTintColor: tdWhite,
         color: tdWhite,
@@ -169,7 +387,13 @@ class _PaymentPageState extends State<PaymentPage> {
               SizedBox(
                 height: 10.h,
               ),
-              _buildPriceInfo(widget.car.rentPrice),
+              if (isOffer.isEmpty) ...[
+                _buildPriceInfo(
+                    widget.car.rentPrice, perentageSale, finalPrice),
+              ] else ...[
+                _buildPriceInfo(double.parse(isOffer.first.discountPrice),
+                    perentageSale, finalPrice),
+              ],
               SizedBox(
                 height: 10.h,
               ),
@@ -223,6 +447,9 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildCarDetails() {
+    final offer = Provider.of<OfferProvider>(context, listen: true);
+    var isOffer = offer.carOffer;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -238,14 +465,39 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
             ),
             SizedBox(height: 3.h),
-            Text(
-              "\$${widget.car.rentPrice} / day",
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: tdBlue,
-                fontWeight: FontWeight.w500,
+            if (isOffer.isEmpty) ...[
+              Text(
+                "\$${widget.car.rentPrice} / day",
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: tdBlue,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
+            ] else ...[
+              Row(
+                children: [
+                  Text(
+                    '\$${widget.car.rentPrice} / day',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      color: tdBlue,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.lineThrough,
+                      decorationThickness: 3,
+                      decorationColor: tdGrey,
+                    ),
+                  ),
+                  Text(
+                    '   \$${isOffer.first.discountPrice}/ day',
+                    style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              )
+            ],
           ],
         ),
         SizedBox(
@@ -283,7 +535,7 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Widget _buildPriceInfo(double carPrice) {
+  Widget _buildPriceInfo(double carPrice, int perent, double finalPrice) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -312,14 +564,14 @@ class _PaymentPageState extends State<PaymentPage> {
               height: 5.h,
             ),
             Text(
-              '0%',
+              '$perentageSale %',
               style: _renterInfoStyle(),
             ),
             SizedBox(
               height: 10.h,
             ),
             Text(
-              '\$$carPrice',
+              '\$$finalPrice',
               style: _renterInfoStyle(),
             ),
           ],
