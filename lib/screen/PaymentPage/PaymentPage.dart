@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carrent/Api/BookingService.dart';
 import 'package:carrent/Widget/Toast/ToastError.dart';
+import 'package:carrent/Widget/Toast/ToastValidation.dart';
 import 'package:carrent/core/Color/color.dart';
 import 'package:carrent/core/Time/CurrentTime.dart';
 import 'package:carrent/model/CarDetails/CarDetailsModel.dart';
@@ -31,7 +33,9 @@ class _PaymentPageState extends State<PaymentPage> {
   GetPromo? validPromo;
   double finalPrice = 0.0;
   int perentageSale = 0;
-  String promoCodeText = "Use a discount code"; 
+  String promoCodeText = "Use a discount code";
+  bool validPromoCode = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -102,8 +106,7 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void checkAndSavePromo(String promoCode, List<GetPromo> userPromo) {
-
-    if(promoCode.isEmpty || promoCode == "") {
+    if (promoCode.isEmpty || promoCode == "") {
       showToast('Enter a promo code');
       return;
     }
@@ -126,15 +129,15 @@ class _PaymentPageState extends State<PaymentPage> {
     }
 
     if (validPromo != null) {
-      if(validPromo!.promoDetails!.companyID != widget.car.companyId){
+      if (validPromo!.promoDetails!.companyID != widget.car.companyId) {
         showToast('This promo code is not applicable to this company car');
-      }else {
-      setState(() {
-        promoCodeText = promoCode;
-        perentageSale = validPromo!.promoDetails!.discountPercentage;
-        finalPrice = finalPrice - (finalPrice * (perentageSale / 100));
-      });
-
+      } else {
+        setState(() {
+          validPromoCode = true;
+          promoCodeText = promoCode;
+          perentageSale = validPromo!.promoDetails!.discountPercentage;
+          finalPrice = finalPrice - (finalPrice * (perentageSale / 100));
+        });
       }
     } else {
       showToast('No valid promo found for the provided promoCode');
@@ -245,6 +248,50 @@ class _PaymentPageState extends State<PaymentPage> {
         );
       },
     );
+  }
+
+  void submitHandler() async {
+    BookingService service = BookingService();
+
+    if (startDate == null) {
+      return showValidationToast('Select a date range');
+    }
+
+    if (endDate == null) {
+      return showValidationToast('Select a date range');
+    }
+    String startDateIso = '', endDateIso = '';
+
+    if (startDate != null && endDate != null) {
+      startDateIso = startDate!.toIso8601String(); // Convert to ISO 8601 string
+      endDateIso = endDate!.toIso8601String();
+    }
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      bool success = await service.createNewBooking(
+          widget.car.id,
+          calculateTotalDays(),
+          finalPrice.toString(),
+          widget.car.rentPrice,
+          perentageSale,
+          validPromoCode ? promoCodeController.text : null,
+          startDateIso,
+          endDateIso);
+      if (success) {
+        setState(() {
+          context.go(context.namedLocation('ThankYou'));
+        });
+      }
+    } catch (e) {
+      showToast('Something went wrong');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -398,9 +445,11 @@ class _PaymentPageState extends State<PaymentPage> {
                 height: 10.h,
               ),
               GestureDetector(
-                onTap: () {
-                  // @TODO payment
-                },
+                onTap: isLoading
+                    ? null
+                    : () {
+                        submitHandler();
+                      },
                 child: Container(
                   width: double.infinity,
                   height: 40.h,
@@ -409,7 +458,7 @@ class _PaymentPageState extends State<PaymentPage> {
                       color: tdBlueLight),
                   child: Center(
                       child: Text(
-                    'Payment',
+                    isLoading ? "Loading..." : 'Payment',
                     style: TextStyle(
                         fontSize: 15.sp,
                         color: tdWhite,

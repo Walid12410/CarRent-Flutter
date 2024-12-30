@@ -202,7 +202,7 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
         color: tdWhite,
         child: Padding(
           padding: const EdgeInsets.only(left: 15).w,
-          child: Row(children: [
+          child:carData.carStatus != "Rented" ? Row(children: [
             SizedBox(
               width: 150.w,
               child: Column(
@@ -280,9 +280,13 @@ class _CarDetailsPageState extends State<CarDetailsPage> {
                 )),
               ),
             ))
-          ]),
+          ]) : Center(
+            child: Text('Car already rented',style: TextStyle(fontSize: 15.sp,color: tdBlueLight,
+            fontWeight: FontWeight.bold),),
+          )
         ),
       ),
+    
     );
   }
 }

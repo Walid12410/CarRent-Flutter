@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:carrent/core/UrlLuncher/UrlLuncherHelpe.dart";
 import "package:go_router/go_router.dart";
-
+import "package:url_launcher/url_launcher.dart";
 
 class CompanyProfileHeader extends StatelessWidget {
   const CompanyProfileHeader({
@@ -45,7 +45,8 @@ class CompanyProfileHeader extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () async {
-                      await URLLauncher.openMap(companyData!.latitude, companyData!.longitude);
+                    await URLLauncher.openMap(
+                        companyData!.latitude, companyData!.longitude);
                   },
                   icon: Icon(
                     Icons.location_on_rounded,
@@ -67,7 +68,17 @@ class CompanyProfileHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    try {
+                      final Uri launchUri = Uri(
+                        scheme: 'tel',
+                        path: companyData!.companyPhoneNumber,
+                      );
+                      await launchUrl(launchUri);
+                    } catch (e) {
+                      throw Exception(e);
+                    }
+                  },
                   icon: Icon(
                     Icons.support_agent,
                     color: tdBlue,
@@ -116,4 +127,3 @@ class CompanyProfileHeader extends StatelessWidget {
     );
   }
 }
-

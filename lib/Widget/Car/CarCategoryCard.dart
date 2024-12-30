@@ -136,7 +136,8 @@ class CarCategoryCard extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        // Booking car action
+            GoRouter.of(context).pushNamed('CarDetails',
+              pathParameters: {'id': car.id.toString()});
                       },
                       child: Container(
                         height: 40.h,
@@ -147,7 +148,7 @@ class CarCategoryCard extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            'Booking car',
+                            'Explore Car Info',
                             style: TextStyle(
                               fontSize: 12.sp,
                               color: tdGrey,
@@ -161,7 +162,8 @@ class CarCategoryCard extends StatelessWidget {
               )
             : GestureDetector(
                 onTap: () {
-                  // Booking car action
+            GoRouter.of(context).pushNamed('CarDetails',
+              pathParameters: {'id': car.id.toString()});
                 },
                 child: Container(
                   height: 40.h,
@@ -172,7 +174,7 @@ class CarCategoryCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      'Booking car',
+                      'Explore Car Info',
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: tdWhite,

@@ -27,6 +27,7 @@ import 'package:carrent/screen/RentWayPage/RentWayPage.dart';
 import 'package:carrent/core/NavigationButton/NavBar.dart';
 import 'package:carrent/screen/ReviewMakePage/AddReview.dart';
 import 'package:carrent/screen/SearchPage/SearchPage.dart';
+import 'package:carrent/screen/ThankYouPage/ThankYouPage.dart';
 import 'package:carrent/screen/UpdateProfilePage/UpdateProfilePage.dart';
 import 'package:carrent/screen/UpdateReviewPage/UpdateReviewPage.dart';
 import 'package:carrent/screen/UserBookingListPage/UserBookingPage.dart';
@@ -138,7 +139,6 @@ class AppNavigation {
                             FadeTransition(opacity: animation, child: child),
                       ),
                     ),
-
                     GoRoute(
                       path: 'Notification',
                       name: 'Notification',
@@ -294,8 +294,9 @@ class AppNavigation {
           return CompanyDetailsPage(companyId: companyId);
         },
       ),
-     GoRoute(
-        path: '/companyCarSearch/:id', // Using path parameters for dynamic content
+      GoRoute(
+        path:
+            '/companyCarSearch/:id', // Using path parameters for dynamic content
         name: 'companyCarSearch',
         builder: (context, state) {
           final companyId = state.pathParameters['id']!;
@@ -344,11 +345,19 @@ class AppNavigation {
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
+        path: '/thankYou',
+        name: "ThankYou",
+        builder: (context, state) => ThankYouPage(
+          key: state.pageKey,
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: '/companyMoreDetails',
         name: "CompanyMoreDetails",
         builder: (context, state) => CompanyMoreDetails(
-            key: state.pageKey,
-          ),
+          key: state.pageKey,
+        ),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
