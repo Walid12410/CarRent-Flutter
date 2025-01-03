@@ -63,6 +63,9 @@ class _PaymentPageState extends State<PaymentPage> {
 
   // Function to show the date range picker dialog
   Future<void> pickerDateRange() async {
+    final offer = Provider.of<OfferProvider>(context, listen: false);
+    var isOffer = offer.carOffer;
+
     DateTimeRange? newDateRange = await showDateRangePicker(
       context: context,
       initialDateRange: DateTimeRange(
@@ -84,10 +87,18 @@ class _PaymentPageState extends State<PaymentPage> {
       },
     );
 
+    if (isOffer.isNotEmpty) {
+      finalPrice = double.parse(isOffer.first.discountPrice);
+    } else {
+      finalPrice = widget.car.rentPrice;
+    }
+
     if (newDateRange != null) {
       setState(() {
         startDate = newDateRange.start;
         endDate = newDateRange.end;
+        int days = calculateTotalDays();
+        finalPrice = days * finalPrice;
       });
     }
   }
