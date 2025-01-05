@@ -28,7 +28,7 @@ class BookingService {
         throw Exception('Failed to load user booking');
       }
     } catch (e) {
-      showToast('Server Error');
+      showToast('Server Error ');
       throw Exception('Server Error');
     }
   }

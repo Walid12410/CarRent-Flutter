@@ -1,3 +1,4 @@
+import 'package:carrent/Widget/Toast/ToastSuccess.dart';
 import 'package:carrent/core/ApiEndPoint.dart';
 import 'package:carrent/model/Notification/NotificationModel.dart';
 import 'package:http/http.dart' as http;
@@ -37,7 +38,7 @@ class NotificationService {
           Uri.parse('${ApiEndpoints.apiUrl}/api/notification/user-notification'),
           headers: {'Authorization': 'Bearer $token'});
       if (response.statusCode == 200) {
-        return;
+        return showSucessToast("Notification deleted successfully!");
       } else {
         throw Exception('Failed to delete Notification');
       }

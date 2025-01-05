@@ -12,18 +12,17 @@ class GetPromo {
   final String updatedAt;
   final Promo? promoDetails;
 
-  GetPromo({
-    required this.id,
-    required this.userId,
-    required this.promoId,
-    required this.claimedAt,
-    required this.isUsed,
-    required this.startDate,
-    required this.endDate,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.promoDetails
-  });
+  GetPromo(
+      {required this.id,
+      required this.userId,
+      required this.promoId,
+      required this.claimedAt,
+      required this.isUsed,
+      required this.startDate,
+      required this.endDate,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.promoDetails});
 
   factory GetPromo.fromJson(Map<String, dynamic> json) {
     return GetPromo(
@@ -36,11 +35,10 @@ class GetPromo {
       endDate: json['endDate'] ?? "",
       createdAt: json['createdAt'] ?? "",
       updatedAt: json['updatedAt'] ?? "",
-      promoDetails: json['promoDetails'] != null
-          ? (json['promoDetails'] is List &&
-                  (json['promoDetails'] as List).isNotEmpty
-              ? Promo.fromJson((json['promoDetails'] as List).first)
-              : Promo.fromJson(json['promoDetails']))
+      promoDetails: json['promoDetails'] != null &&
+              json['promoDetails'] is List &&
+              (json['promoDetails'] as List).isNotEmpty
+          ? Promo.fromJson((json['promoDetails'] as List).first)
           : null,
     );
   }

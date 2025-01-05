@@ -1,3 +1,4 @@
+import "package:carrent/Api/NotificationService.dart";
 import "package:carrent/core/Color/color.dart";
 import "package:carrent/provider/Notification_Provider.dart";
 import "package:carrent/screen/NotificationPage/Details/NotificationCard.dart";
@@ -103,7 +104,9 @@ class _NotificationPageState extends State<NotificationPage> {
           children: [
             GestureDetector(
               onTap: () {
+                NotificationService service = NotificationService();
                 notificationProvider.resetUserNotification();
+                service.deleteNotification();
               },
               child: Align(
                 alignment: Alignment.centerRight,
