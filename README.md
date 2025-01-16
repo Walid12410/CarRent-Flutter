@@ -71,3 +71,5 @@ Backend already in my repositories
 ```bash
 git clone https://github.com/Walid12410/CarRent-Flutter
 cd car-rent-app
+flutter pub get
+flutter run
